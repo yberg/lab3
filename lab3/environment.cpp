@@ -42,6 +42,14 @@ bool Environment::drop(const Item& item) {
     return false;
 }
 
+struct Description& Environment::description() {
+    Description * d = new Description();
+    d->environment = _environment;
+    d->items = _items;
+    d->entities = _entities;
+    return *d;
+}
+
 ostream& operator<<(ostream& os, const Environment& env) {
     os << "hej";
     return os;

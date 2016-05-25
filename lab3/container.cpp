@@ -12,16 +12,8 @@ Container::Container() {
     
 }
 
-int Container::weight() {
-    return 0;
-}
-
-int Container::volume() {
-    return 0;
-}
-
-int Container::price() {
-    return 0;
+Container::~Container() {
+    
 }
 
 int Container::hold_weight() {

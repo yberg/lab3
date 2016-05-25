@@ -9,16 +9,23 @@
 #ifndef item_hpp
 #define item_hpp
 
+#include <string>
+
+using namespace std;
+
 class Item {
 private:
 protected:
+    int _weight, _volume, _price;
+    string _name;
 public:
     Item();
     ~Item();
     
-    virtual int weight() = 0;
-    virtual int volume() = 0;
-    virtual int price() = 0;
+    virtual int weight();
+    virtual int volume();
+    virtual int price();
+    virtual string name();
 };
 
 #endif /* item_hpp */

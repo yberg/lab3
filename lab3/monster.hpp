@@ -15,11 +15,9 @@ class Monster : public Enemy {
 private:
 protected:
 public:
-    Monster();
+    Monster(string, string, int, int);
     ~Monster();
-    
-    virtual string type();
-    virtual string name();
+
     virtual void action();
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);

@@ -16,10 +16,7 @@ private:
 protected:
 public:
     Container();
-    
-    virtual int weight();
-    virtual int volume();
-    virtual int price();
+    ~Container();
     
     int hold_weight();
     int hold_volume();

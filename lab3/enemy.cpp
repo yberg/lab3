@@ -15,3 +15,11 @@ Enemy::Enemy() {
 Enemy::~Enemy() {
     
 }
+
+int Enemy::hp() {
+    return _hp;
+}
+
+int Enemy::damage() {
+    return _damage;
+}

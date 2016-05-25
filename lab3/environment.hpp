@@ -18,17 +18,21 @@ using namespace std;
 class Environment {
 private:
 protected:
+    string _environment;
+    vector<Item*> _items;
+    vector<Entity*> _entities;
 public:
     Environment();
     ~Environment();
     
     virtual vector<const char> directions() = 0;
-    virtual struct Description& description() = 0;
+    
+    virtual struct Description& description();
 
     Item& neighbor(const char);
     bool enter(const Entity&);
     bool leave(const Entity&);
-    bool pick_up(const Item&);  
+    bool pick_up(const Item&);
     bool drop(const Item&);
 };
 

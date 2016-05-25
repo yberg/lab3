@@ -12,6 +12,11 @@
 House::House() {
     _entrance = Direction::UP;
     _exit = (_entrance + 2) % 4;
+    _has_enemy = true;
+    
+    _environment = "House";
+    _items = vector<Item*>();
+    _entities = vector<Entity*>();
 }
 
 House::~House() {
@@ -20,14 +25,6 @@ House::~House() {
 
 vector<const char> House::directions() {
     return vector<const char>();
-}
-
-struct Description& House::description() {
-    Description * d = new Description();
-    d->environment = "House";
-    d->items = vector<Item*>();
-    d->entities = vector<Entity*>();
-    return *d;
 }
 
 char House::entrance() {

@@ -13,17 +13,26 @@
 
 class Player : public Entity {
 private:
-    string _name;
+    int _balance, _level, _hp;
+    vector<Item*> _inventory;
 protected:
 public:
     Player(string);
     ~Player();
-    
-    virtual string type();
-    virtual string name();
+
     virtual void action();
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);
+    
+    int balance();
+    int level();
+    int hp();
+    
+    void balance(int);
+    void level(int);
+    void hp(int);
+    bool buy(Item*);
+    vector<Item*>& inventory();
 };
 
 #endif /* player_hpp */

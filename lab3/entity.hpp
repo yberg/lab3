@@ -22,6 +22,7 @@ private:
     //vector<const Item&> _items;
     bool enter(Environment*, Environment*, const char);
 protected:
+    string _type, _name;
 public:
     Entity();
     ~Entity();
@@ -30,8 +31,9 @@ public:
         int row, col;
     } _position;
     
-    virtual string type() = 0;
-    virtual string name() = 0;
+    virtual string type();
+    virtual string name();
+    
     virtual void action() = 0;
     virtual bool fight(const Entity&) = 0;
     virtual bool talk_to(const Entity&) = 0;

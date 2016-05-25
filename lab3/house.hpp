@@ -20,7 +20,6 @@ public:
     ~House();
     
     virtual vector<const char> directions();
-    virtual struct Description& description();
     
     char entrance();
     char exit();

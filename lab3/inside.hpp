@@ -14,12 +14,14 @@
 class Inside : public Environment {
 private:
 protected:
+    bool _has_enemy;
 public:
     Inside();
     ~Inside();
     
     virtual vector<const char> directions() = 0;
-    virtual struct Description& description() = 0;
+    
+    virtual bool has_enemy();
 };
 
 #endif /* inside_hpp */

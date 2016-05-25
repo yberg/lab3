@@ -8,10 +8,28 @@
 
 #include "item.hpp"
 
+using namespace std;
+
 Item::Item() {
     
 }
 
 Item::~Item() {
     
+}
+
+int Item::weight() {
+    return _weight;
+}
+
+int Item::volume() {
+    return _volume;
+}
+
+int Item::price() {
+    return _price;
+}
+
+string Item::name() {
+    return _name;
 }

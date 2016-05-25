@@ -8,20 +8,15 @@
 
 #include "monster.hpp"
 
-Monster::Monster() {
-    
+Monster::Monster(string type, string name, int hp, int damage) {
+    _type = type;
+    _name = name;
+    _hp = hp;
+    _damage = damage;
 }
 
 Monster::~Monster() {
     
-}
-
-string Monster::type() {
-    return "Monster";
-}
-
-string Monster::name() {
-    return "Monsterkalle";
 }
 
 void Monster::action() {

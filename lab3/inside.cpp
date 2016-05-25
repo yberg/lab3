@@ -15,3 +15,7 @@ Inside::Inside() {
 Inside::~Inside() {
     
 }
+
+bool Inside::has_enemy() {
+    return _has_enemy;
+}

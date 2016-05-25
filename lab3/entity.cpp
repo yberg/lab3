@@ -16,11 +16,19 @@
 using namespace std;
 
 Entity::Entity() {
-    _position = { 0, 0 };
+    _position = { Constants::WORLD_SIZE/2, Constants::WORLD_SIZE/2 };
 }
 
 Entity::~Entity() {
     
+}
+
+string Entity::type() {
+    return _type;
+}
+
+string Entity::name() {
+    return _name;
 }
 
 bool Entity::go(const char direction, const vector<vector<Environment*>>& env) {

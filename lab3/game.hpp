@@ -20,8 +20,20 @@ public:
     Game();
     ~Game();
     
+    void init_screen();
+    void intro();
+    void init_game();
     void run();
+
     void draw();
+    void draw_edges();
+    void draw_environment();
+    void draw_player();
+    void draw_info();
+    void draw_inventory();
+    void draw_buymenu();
+    void draw_fight();
+    
     void putch(char, int, int);
     void putstr(string, int, int);
     void clearscr();
