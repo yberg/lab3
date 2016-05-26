@@ -10,6 +10,7 @@
 #define game_hpp
 
 #include <string>
+#include "enemy.hpp"
 
 using namespace std;
 
@@ -23,8 +24,10 @@ public:
     void init_screen();
     void intro();
     void init_game();
+    void quit();
     void run();
-
+    void fight(Enemy*);
+    
     void draw();
     void draw_edges();
     void draw_environment();

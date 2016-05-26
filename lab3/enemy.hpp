@@ -14,16 +14,15 @@
 class Enemy : public Entity {
 private:
 protected:
-    int _hp,_damage;
+    int _damage;
 public:
     Enemy();
     ~Enemy();
     
-    virtual void action() = 0;
+    virtual void action(Entity*, Item*) = 0;
     virtual bool fight(const Entity&) = 0;
     virtual bool talk_to(const Entity&) = 0;
     
-    virtual int hp();
     virtual int damage();
     
 };

@@ -7,21 +7,32 @@
 //
 
 #include "player.hpp"
-#include "potion.hpp"
 #include <algorithm>
 #include <iostream>
+#include "potion.hpp"
+#include "enemy.hpp"
+#include "weapon.hpp"
+#include "constants.hpp"
 
-Player::Player(string n) {
+Player::Player(string name) {
     _type = "Player";
-    _name = n;
+    _name = name;
+    _damage = Constants::PLAYER_BASE_DAMAGE;
 }
 
 Player::~Player() {
     
 }
 
-void Player::action() {
-    
+void Player::action(Entity* entity, Item* item) {
+    if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
+        if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
+            enemy->hp(max(0, enemy->hp() - weapon->damage()));
+        }
+        else {
+            enemy->hp(max(0, enemy->hp() - this->damage()));
+        }
+    }
 }
 
 bool Player::fight(const Entity& entity) {
@@ -40,20 +51,16 @@ int Player::level() {
     return _level;
 }
 
-int Player::hp() {
-    return _hp;
+void Player::balance(int balance) {
+    _balance = balance;
 }
 
-void Player::balance(int b) {
-    _balance = b;
+void Player::level(int level) {
+    _level = level;
 }
 
-void Player::level(int l) {
-    _level = l;
-}
-
-void Player::hp(int h) {
-    _hp = h;
+int Player::damage() {
+    return _damage;
 }
 
 bool Player::buy(Item* item) {
@@ -65,8 +72,7 @@ bool Player::buy(Item* item) {
     if (dynamic_cast<Potion*>(item)) {
         _hp = min(100, _hp + ((Potion*)item)->healing());
     }
-    else {
-        // Add to inventory
+    else {  // Add to inventory
         _inventory.push_back(item);
     }
     

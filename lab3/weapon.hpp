@@ -13,13 +13,13 @@
 
 class Weapon : public Item {
 private:
-    int _bonus_damage, _block;
+    int _damage, _block;
 protected:
 public:
     Weapon(string, int, int, int);
     ~Weapon();
     
-    int bonus_damage();
+    int damage();
     int block();
 };
 

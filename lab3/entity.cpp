@@ -31,6 +31,22 @@ string Entity::name() {
     return _name;
 }
 
+int Entity::hp() {
+    return _hp;
+}
+
+int Entity::max_hp() {
+    return _max_hp;
+}
+
+void Entity::hp(int hp) {
+    _hp = hp;
+}
+
+bool Entity::is_alive() {
+    return _hp > 0;
+}
+
 bool Entity::go(const char direction, const vector<vector<Environment*>>& env) {
     int &row = _position.row;
     int &col = _position.col;

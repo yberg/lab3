@@ -10,27 +10,28 @@
 #define player_hpp
 
 #include "entity.hpp"
+#include "entity.hpp"
+#include "item.hpp"
 
 class Player : public Entity {
 private:
-    int _balance, _level, _hp;
+    int _balance, _level, _damage;
     vector<Item*> _inventory;
 protected:
 public:
     Player(string);
     ~Player();
 
-    virtual void action();
+    virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);
     
     int balance();
     int level();
-    int hp();
+    int damage();
     
     void balance(int);
     void level(int);
-    void hp(int);
     bool buy(Item*);
     vector<Item*>& inventory();
 };

@@ -23,6 +23,7 @@ private:
     bool enter(Environment*, Environment*, const char);
 protected:
     string _type, _name;
+    int _hp, _max_hp;
 public:
     Entity();
     ~Entity();
@@ -34,9 +35,14 @@ public:
     virtual string type();
     virtual string name();
     
-    virtual void action() = 0;
+    virtual void action(Entity*, Item*) = 0;
     virtual bool fight(const Entity&) = 0;
     virtual bool talk_to(const Entity&) = 0;
+    
+    virtual int hp();
+    virtual int max_hp();
+    virtual void hp(int);
+    virtual bool is_alive();
     
     bool go(const char, const vector<vector<Environment*>>&);
     Position position();

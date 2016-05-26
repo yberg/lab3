@@ -18,7 +18,7 @@ public:
     Monster(string, string, int, int);
     ~Monster();
 
-    virtual void action();
+    virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);
 };

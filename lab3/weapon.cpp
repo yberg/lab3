@@ -8,7 +8,7 @@
 
 #include "weapon.hpp"
 
-Weapon::Weapon(string name, int bonus_damage, int block, int price) : _bonus_damage(bonus_damage), _block(block) {
+Weapon::Weapon(string name, int damage, int block, int price) : _damage(damage), _block(block) {
     _name = name;
     _price = price;
 }
@@ -17,8 +17,8 @@ Weapon::~Weapon() {
     
 }
 
-int Weapon::bonus_damage() {
-    return _bonus_damage;
+int Weapon::damage() {
+    return _damage;
 }
 
 int Weapon::block() {

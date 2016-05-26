@@ -7,11 +7,13 @@
 //
 
 #include "monster.hpp"
+#include "player.hpp"
 
 Monster::Monster(string type, string name, int hp, int damage) {
     _type = type;
     _name = name;
     _hp = hp;
+    _max_hp = hp;
     _damage = damage;
 }
 
@@ -19,8 +21,10 @@ Monster::~Monster() {
     
 }
 
-void Monster::action() {
-    
+void Monster::action(Entity* entity, Item* item) {
+    if (Player* player = dynamic_cast<Player*>(entity)) {
+        player->hp(max(0, player->hp() - this->damage()));
+    }
 }
 
 bool Monster::fight(const Entity& entity) {
