@@ -7,7 +7,6 @@
 //
 
 /**
- Blocka
  Xp
  Droppa nyckel när level > x
  Köpa uppgraderingar
@@ -50,6 +49,7 @@
 #define GREEN_BG        11
 #define YELLOW_BG       12
 #define RED_BG          13
+#define BLUE_BG         14
 
 Player player("Viktor");
 vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
@@ -110,6 +110,7 @@ void Game::init_screen() {
     init_pair(11, COLOR_GREEN, COLOR_BG);
     init_pair(12, COLOR_YELLOW, COLOR_BG);
     init_pair(13, COLOR_RED, COLOR_BG);
+    init_pair(14, COLOR_BLUE, COLOR_BG);
 }
 
 void Game::intro() {
@@ -226,6 +227,7 @@ void Game::fight(Enemy* enemy) {
         }
         else if (attacked && enemy->hp() == 0) {
             player.balance(player.balance() + enemy->max_hp()/10);
+            player.exp(player.exp() + enemy->max_hp()/20);
         }
         draw();
     }
@@ -248,6 +250,8 @@ void Game::draw() {
 
 void Game::draw_edges() {
     // Edges
+    if (show_fight)
+        attron(RED_BG);
     for (int i = 1; i <= Constants::WORLD_SIZE*2; i++) {
         move(0, i);
         addch(115 | A_ALTCHARSET);
@@ -260,6 +264,8 @@ void Game::draw_edges() {
         move(i, Constants::WORLD_SIZE*2 + 1);
         addch(ACS_VLINE);
     }
+    if (show_fight)
+        attroff(RED_BG);
 }
 
 void Game::draw_environment() {
@@ -316,7 +322,7 @@ void Game::draw_info() {
     // Experience
     move(23, 1);
     attron(COLOR_PAIR(FG_GREEN));
-    for (i = 0; i < player.hp()/5; i++) {
+    for (i = 0; i < player.exp()/5; i++) {
         if (i == 0)
             addch('[');
         else if (i == 19)
@@ -380,6 +386,17 @@ void Game::draw_inventory() {
         if (show_fight)
             printw("%d. ", j--);
         printw((*it)->name().c_str());
+        if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
+            printw(" (");
+            attron(COLOR_PAIR(RED_BG));
+            printw("%d", w->damage());
+            attroff(COLOR_PAIR(RED_BG));
+            printw(", ");
+            attron(COLOR_PAIR(BLUE_BG));
+            printw("%d", w->block());
+            attroff(COLOR_PAIR(BLUE_BG));
+            printw(")");
+        }
     }
     if (player.inventory().size() == 0) {
         move(i--, 50);
@@ -412,10 +429,26 @@ void Game::draw_buymenu() {
     
     int choice = 1, i = 2;
     for (auto it = Constants::STORE.begin(); it != Constants::STORE.end(); ++it) {
-        move(i, 50);
-        printw("%d. $%d", choice++, (*it)->price());
-        move(i++, 57);
-        printw((*it)->name().c_str());
+        move(i++, 50);
+        printw("%d. $%-3d %s", choice++, (*it)->price(), (*it)->name().c_str());
+        if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
+            printw(" (");
+            attron(COLOR_PAIR(RED_BG));
+            printw("%d", w->damage());
+            attroff(COLOR_PAIR(RED_BG));
+            printw(", ");
+            attron(COLOR_PAIR(BLUE_BG));
+            printw("%d", w->block());
+            attroff(COLOR_PAIR(BLUE_BG));
+            printw(")");
+        }
+        if (Potion* p = dynamic_cast<Potion*>(*it)) {
+            printw(" (");
+            attron(COLOR_PAIR(GREEN_BG));
+            printw("%d", p->healing());
+            attroff(COLOR_PAIR(GREEN_BG));
+            printw(")");
+        }
     }
     putstr("b. Close", ++i, 50);
 }

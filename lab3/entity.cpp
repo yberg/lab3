@@ -23,19 +23,19 @@ Entity::~Entity() {
     
 }
 
-string Entity::type() {
+string Entity::type() const {
     return _type;
 }
 
-string Entity::name() {
+string Entity::name() const {
     return _name;
 }
 
-int Entity::hp() {
+int Entity::hp() const {
     return _hp;
 }
 
-int Entity::max_hp() {
+int Entity::max_hp() const {
     return _max_hp;
 }
 
@@ -43,7 +43,7 @@ void Entity::hp(int hp) {
     _hp = hp;
 }
 
-bool Entity::is_alive() {
+bool Entity::is_alive() const {
     return _hp > 0;
 }
 

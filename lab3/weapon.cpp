@@ -17,10 +17,18 @@ Weapon::~Weapon() {
     
 }
 
-int Weapon::damage() {
+int Weapon::damage() const {
     return _damage;
 }
 
-int Weapon::block() {
+int Weapon::block() const {
     return _block;
+}
+
+void Weapon::damage(int damage) {
+    _damage = damage;
+}
+
+void Weapon::block(int block) {
+    _block = block;
 }

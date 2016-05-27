@@ -32,17 +32,17 @@ public:
         int row, col;
     } _position;
     
-    virtual string type();
-    virtual string name();
+    virtual string type() const;
+    virtual string name() const;
     
     virtual void action(Entity*, Item*) = 0;
     virtual bool fight(const Entity&) = 0;
     virtual bool talk_to(const Entity&) = 0;
     
-    virtual int hp();
-    virtual int max_hp();
+    virtual int hp() const;
+    virtual int max_hp() const;
     virtual void hp(int);
-    virtual bool is_alive();
+    virtual bool is_alive() const;
     
     bool go(const char, const vector<vector<Environment*>>&);
     Position position();

@@ -22,10 +22,12 @@ public:
     Item();
     ~Item();
     
-    virtual int weight();
-    virtual int volume();
-    virtual int price();
-    virtual string name();
+    virtual int weight() const;
+    virtual int volume() const;
+    virtual int price() const;
+    virtual string name() const;
+    
+    virtual void price(int);
 };
 
 #endif /* item_hpp */

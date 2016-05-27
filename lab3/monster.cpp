@@ -8,6 +8,7 @@
 
 #include "monster.hpp"
 #include "player.hpp"
+#include "weapon.hpp"
 
 Monster::Monster(string type, string name, int hp, int damage) {
     _type = type;
@@ -23,7 +24,14 @@ Monster::~Monster() {
 
 void Monster::action(Entity* entity, Item* item) {
     if (Player* player = dynamic_cast<Player*>(entity)) {
-        player->hp(max(0, player->hp() - this->damage()));
+        int damage = this->damage();
+        for (auto it = player->inventory().begin(); it != player->inventory().end(); ++it) {
+            if (Weapon* weapon = dynamic_cast<Weapon*>(*it)) {
+                damage -= weapon->block();
+            }
+        }
+        damage = max(0, damage);
+        player->hp(max(0, player->hp() - damage));
     }
 }
 

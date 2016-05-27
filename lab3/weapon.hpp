@@ -19,8 +19,11 @@ public:
     Weapon(string, int, int, int);
     ~Weapon();
     
-    int damage();
-    int block();
+    int damage() const;
+    int block() const;
+    
+    void damage(int);
+    void block(int);
 };
 
 #endif /* weapon_hpp */

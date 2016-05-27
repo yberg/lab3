@@ -14,10 +14,12 @@
 #include "weapon.hpp"
 #include "constants.hpp"
 
-Player::Player(string name) {
+Player::Player(string name) :
+_damage(Constants::PLAYER_BASE_DAMAGE), _exp(0) {
     _type = "Player";
     _name = name;
-    _damage = Constants::PLAYER_BASE_DAMAGE;
+    
+    srand((unsigned int)time(NULL));
 }
 
 Player::~Player() {
@@ -26,12 +28,14 @@ Player::~Player() {
 
 void Player::action(Entity* entity, Item* item) {
     if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
+        int damage;
         if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
-            enemy->hp(max(0, enemy->hp() - weapon->damage()));
+            damage = (rand() % weapon->damage());
         }
         else {
-            enemy->hp(max(0, enemy->hp() - this->damage()));
+            damage = (rand() % this->damage());
         }
+        enemy->hp(max(0, enemy->hp() - damage));
     }
 }
 
@@ -43,12 +47,20 @@ bool Player::talk_to(const Entity& entity) {
     return false;
 }
 
-int Player::balance() {
+int Player::balance() const {
     return _balance;
 }
 
-int Player::level() {
+int Player::level() const {
     return _level;
+}
+
+int Player::damage() const {
+    return _damage;
+}
+
+int Player::exp() const {
+    return _exp;
 }
 
 void Player::balance(int balance) {
@@ -59,8 +71,8 @@ void Player::level(int level) {
     _level = level;
 }
 
-int Player::damage() {
-    return _damage;
+void Player::exp(int exp) {
+    _exp = exp;
 }
 
 bool Player::buy(Item* item) {
@@ -69,11 +81,21 @@ bool Player::buy(Item* item) {
     
     _balance -= item->price();
     
-    if (dynamic_cast<Potion*>(item)) {
-        _hp = min(100, _hp + ((Potion*)item)->healing());
+    if (Potion* potion = dynamic_cast<Potion*>(item)) {
+        _hp = min(100, _hp + potion->healing());
     }
-    else {  // Add to inventory
-        _inventory.push_back(item);
+    else if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {  // Add to inventory
+        const string name = weapon->name();
+        auto it = find_if(this->inventory().begin(), this->inventory().end(), [&name](const Item* i) {return i->name() == name;});
+        if (it != this->inventory().end()) {
+            Weapon* w = (Weapon*) *it;
+            w->damage(w->damage() * Constants::WEAPON_DAMAGE_MULTIPLIER);
+            w->block(w->block() * Constants::WEAPON_BLOCK_MULTIPLIER);
+        }
+        else {
+            _inventory.push_back(item);
+        }
+        item->price(item->price() * Constants::STORE_PRICE_MULTIPLIER);  // Update price in store
     }
     
     return true;

@@ -18,18 +18,22 @@ Item::~Item() {
     
 }
 
-int Item::weight() {
+int Item::weight() const{
     return _weight;
 }
 
-int Item::volume() {
+int Item::volume() const {
     return _volume;
 }
 
-int Item::price() {
+int Item::price() const {
     return _price;
 }
 
-string Item::name() {
+string Item::name() const {
     return _name;
+}
+
+void Item::price(int price) {
+    _price = price;
 }
