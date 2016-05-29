@@ -27,7 +27,6 @@ Monster::~Monster() {
 void Monster::action(Entity* entity, Item* item) {
     if (Player* player = dynamic_cast<Player*>(entity)) {
         int damage = (rand() % (int)(this->damage() * Constants::DAMAGE_PER_LEVEL_MULTIPLIER)) + 1;
-        //damage = this->damage() * Constants::DAMAGE_PER_LEVEL_MULTIPLIER;
         damage -= player->block();
         damage = max(0, damage);
         player->hp(max(0, player->hp() - damage));
