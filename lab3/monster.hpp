@@ -15,7 +15,7 @@ class Monster : public Enemy {
 private:
 protected:
 public:
-    Monster(string, string, int, int);
+    Monster(string, string);
     ~Monster();
 
     virtual void action(Entity*, Item*);

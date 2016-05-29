@@ -43,6 +43,10 @@ void Entity::hp(int hp) {
     _hp = hp;
 }
 
+void Entity::max_hp(int max_hp) {
+    _max_hp = max_hp;
+}
+
 bool Entity::is_alive() const {
     return _hp > 0;
 }

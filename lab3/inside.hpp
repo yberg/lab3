@@ -14,7 +14,7 @@
 class Inside : public Environment {
 private:
 protected:
-    bool _has_enemy;
+    bool _has_enemy = false;
 public:
     Inside();
     ~Inside();
@@ -22,6 +22,8 @@ public:
     virtual vector<const char> directions() = 0;
     
     virtual bool has_enemy();
+    
+    virtual void has_enemy(bool);
 };
 
 #endif /* inside_hpp */

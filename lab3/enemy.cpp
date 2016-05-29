@@ -16,6 +16,10 @@ Enemy::~Enemy() {
     
 }
 
-int Enemy::damage() {
+int Enemy::damage() const {
     return _damage;
+}
+
+void Enemy::damage(int damage) {
+    _damage = damage;
 }

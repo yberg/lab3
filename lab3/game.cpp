@@ -7,9 +7,8 @@
 //
 
 /**
- Xp
- Droppa nyckel när level > x
- Köpa uppgraderingar
+ Köpa potions under fight
+ Rött hus med boss
  Slåss mot slutboss i låst rum
  */
 
@@ -27,6 +26,7 @@
 #include "player.hpp"
 #include "monster.hpp"
 #include "direction.hpp"
+#include "key.hpp"
 #include "constants.hpp"
 
 #define COLOR_FG        COLOR_WHITE
@@ -50,6 +50,8 @@
 #define YELLOW_BG       12
 #define RED_BG          13
 #define BLUE_BG         14
+#define FG_CYAN         15
+#define CYAN_BG         16
 
 Player player("Viktor");
 vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
@@ -67,7 +69,7 @@ Game::Game() {
             int r = rand() % 5;
             if (r < 1) {
                 environment.at(i).push_back(new House());
-                entities.at(i).push_back(new Monster("Wizard", "Kalle", 80, 2));
+                entities.at(i).push_back(new Monster("Wizard", "Monsterkalle"));
             }
             else if (r < 2) {
                 environment.at(i).push_back(new Water());
@@ -111,6 +113,8 @@ void Game::init_screen() {
     init_pair(12, COLOR_YELLOW, COLOR_BG);
     init_pair(13, COLOR_RED, COLOR_BG);
     init_pair(14, COLOR_BLUE, COLOR_BG);
+    init_pair(15, COLOR_FG, COLOR_CYAN);
+    init_pair(16, COLOR_CYAN, COLOR_BG);
 }
 
 void Game::intro() {
@@ -124,16 +128,16 @@ void Game::intro() {
 }
 
 void Game::init_game() {
-    player.balance(100);
-    player.level(1);
-    player.hp(50);
+    player.balance(Constants::PLAYER_START_BALANCE);
+    player.level(Constants::PLAYER_START_LEVEL);
+    player.hp(Constants::PLAYER_START_HP);
 }
 
 void Game::quit() {
-    move(25, 0);
+    move(27, 1);
     clrtoeol();
     attron(COLOR_PAIR(BG_FG));
-    addstr("Exit? (y/n)");
+    addstr("Quit game? (y/n)");
     attroff(COLOR_PAIR(BG_FG));
     while (true) {
         int r = getch();
@@ -166,6 +170,11 @@ void Game::run() {
             if ((enemy = dynamic_cast<Enemy*>(entities.at(player.position().row).at(player.position().col))) != NULL) {
                 show_fight = true;
                 show_buymenu = false;
+                if (enemy->is_alive()) {
+                    enemy->hp(Constants::ENEMY_HP[player.level() - 1]);
+                    enemy->max_hp(enemy->hp());
+                    enemy->damage(Constants::ENEMY_BASE_DAMAGE * Constants::DAMAGE_PER_LEVEL_MULTIPLIER * player.level());
+                }
             }
             else {
                 show_fight = false;
@@ -217,6 +226,7 @@ void Game::fight(Enemy* enemy) {
                     if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
                         player.action(enemy, weapon);
                         attacked = true;
+                        break;
                     }
                 }
             }
@@ -228,6 +238,14 @@ void Game::fight(Enemy* enemy) {
         else if (attacked && enemy->hp() == 0) {
             player.balance(player.balance() + enemy->max_hp()/10);
             player.exp(player.exp() + enemy->max_hp()/20);
+            
+            if (player.level() == Constants::MAX_LEVEL) {
+                const string key = "Super key";
+                auto it = find_if(player.inventory().begin(), player.inventory().end(), [&key](const Item* i) {return i->name() == key;});
+                if (it == player.inventory().end()) {
+                    player.inventory().push_back(new Key("Super key"));
+                }
+            }
         }
         draw();
     }
@@ -316,13 +334,15 @@ void Game::draw_info() {
     int i;
     
     // Level
-    move(22, 1);
+    move(22, 2);
     printw("Level %d", player.level());
+    move(22, 16 - ceil(log10(player.max_exp()+1)));
+    printw("%3d/%d", player.exp(), player.max_exp());
     
     // Experience
     move(23, 1);
-    attron(COLOR_PAIR(FG_GREEN));
-    for (i = 0; i < player.exp()/5; i++) {
+    attron(COLOR_PAIR(FG_CYAN));
+    for (i = 0; i < (player.exp() / (double)player.max_exp()) * 20; i++) {
         if (i == 0)
             addch('[');
         else if (i == 19)
@@ -330,7 +350,7 @@ void Game::draw_info() {
         else
             addch(' ');
     }
-    attroff(COLOR_PAIR(FG_GREEN));
+    attroff(COLOR_PAIR(FG_CYAN));
     attron(COLOR_PAIR(FG_RED));
     for (; i < 20; i++) {
         if (i == 0)
@@ -343,14 +363,14 @@ void Game::draw_info() {
     attroff(COLOR_PAIR(FG_RED));
     
     // HP
-    putstr("Health", 22, 21);
-    move(22, 34);
-    printw("%3d/100", player.hp());
+    putstr("Health", 22, 22);
+    move(22, 36 - ceil(log10(player.max_hp()+1)));
+    printw("%3d/%d", player.hp(), player.max_hp());
     
     // HP bar
     move(23, 21);
     attron(COLOR_PAIR(FG_GREEN));
-    for (i = 0; i < player.hp()/5; i++) {
+    for (i = 0; i < (player.hp() / (double)player.max_hp()) * 20; i++) {
         if (i == 0)
             addch('[');
         else if (i == 19)
@@ -370,6 +390,12 @@ void Game::draw_info() {
     }
     attroff(COLOR_PAIR(FG_RED));
     
+    // Damage & block
+    move(25, 1);
+    printw("Damage: \t%d (+%d)", player.damage(), player.base_damage());
+    move(26, 1);
+    printw("Block: \t%d", player.block());
+    
     // Balance
     move(22, 50);
     printw("Balance: ");
@@ -379,27 +405,40 @@ void Game::draw_info() {
 }
 
 void Game::draw_inventory() {
-    int i = 20;
-    long j = player.inventory().size();
+    int j = 1;
+    int i = 20 - ((int)player.inventory().size() == 0 ? 1 : (int)player.inventory().size());
+    
+    move(i++, 50);
+    if (!show_buymenu)
+        attron(COLOR_PAIR(GREEN_BG));
+    attron(A_UNDERLINE);
+    printw("      INVENTORY      ");
+    attroff(A_UNDERLINE);
+    if (!show_buymenu)
+        attroff(COLOR_PAIR(GREEN_BG));
+    
+    Weapon* w = nullptr;
     for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
-        move(i--, 50);
-        if (show_fight)
-            printw("%d. ", j--);
+        w = nullptr;
+        move(i++, 50);
+        if ((w = dynamic_cast<Weapon*>(*it)) && show_fight)
+            printw("%d. ", j++);
         printw((*it)->name().c_str());
-        if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
-            printw(" (");
+        if (w != nullptr) {
+            printw(" \t(");
             attron(COLOR_PAIR(RED_BG));
-            printw("%d", w->damage());
+            printw("%2d", w->damage());
             attroff(COLOR_PAIR(RED_BG));
             printw(", ");
-            attron(COLOR_PAIR(BLUE_BG));
-            printw("%d", w->block());
-            attroff(COLOR_PAIR(BLUE_BG));
+            attron(COLOR_PAIR(CYAN_BG));
+            printw("%2d", w->block());
+            attroff(COLOR_PAIR(CYAN_BG));
             printw(")");
         }
     }
+    
     if (player.inventory().size() == 0) {
-        move(i--, 50);
+        move(i, 50);
         if (show_fight) {
             printw("0. Kick");
         }
@@ -409,21 +448,13 @@ void Game::draw_inventory() {
             attroff(COLOR_PAIR(YELLOW_BG));
         }
     }
-    move(i, 50);
-    attron(A_UNDERLINE);
-    if (!show_buymenu)
-        attron(COLOR_PAIR(GREEN_BG));
-    printw("    INVENTORY    ");
-    attroff(A_UNDERLINE);
-    if (!show_buymenu)
-        attroff(COLOR_PAIR(GREEN_BG));
 }
 
 void Game::draw_buymenu() {
     // Buymenu
     attron(A_UNDERLINE);
     attron(COLOR_PAIR(GREEN_BG));
-    putstr("     BUYMENU     ", 1, 50);
+    putstr("       BUYMENU       ", 1, 50);
     attroff(COLOR_PAIR(GREEN_BG));
     attroff(A_UNDERLINE);
     
@@ -437,9 +468,9 @@ void Game::draw_buymenu() {
             printw("%d", w->damage());
             attroff(COLOR_PAIR(RED_BG));
             printw(", ");
-            attron(COLOR_PAIR(BLUE_BG));
+            attron(COLOR_PAIR(CYAN_BG));
             printw("%d", w->block());
-            attroff(COLOR_PAIR(BLUE_BG));
+            attroff(COLOR_PAIR(CYAN_BG));
             printw(")");
         }
         if (Potion* p = dynamic_cast<Potion*>(*it)) {
@@ -460,10 +491,11 @@ void Game::draw_fight() {
         move(1, 50);
         attron(A_UNDERLINE);
         attron(COLOR_PAIR(RED_BG));
-        printw("      FIGHT      ");
+        printw("        FIGHT        ");
         attroff(A_UNDERLINE);
         attroff(COLOR_PAIR(RED_BG));
         
+        // Name
         move(2, 50);
         printw(enemy->name().c_str());
         printw(" (");
@@ -475,16 +507,20 @@ void Game::draw_fight() {
             attroff(COLOR_PAIR(RED_BG));
         }
         
+        // Damage
+        move(3, 50);
+        printw("Damage: %d", enemy->damage());
+        
         // HP
-        putstr("Health", 3, 50);
-        move(3, 66 - ceil(log10(enemy->max_hp()+1)));
+        putstr("Health", 4, 50);
+        move(4, 66 - ceil(log10(enemy->max_hp()+1)));
         printw("%3d/%d", enemy->hp(), enemy->max_hp());
         
         // HP bar
         int i;
-        move(4, 50);
+        move(5, 50);
         attron(COLOR_PAIR(FG_GREEN));
-        for (i = 0; i < enemy->hp()/(enemy->max_hp()/20); i++) {
+        for (i = 0; i < (enemy->hp() / (double)enemy->max_hp()) * 20; i++) {
             if (i == 0)
                 addch('[');
             else if (i == 19)
@@ -509,7 +545,6 @@ void Game::draw_fight() {
 void Game::putch(char c, int row, int col) {
     move(row + 1, col * 2 + 1);
     addch(c);
-    move (row + 1, col * 2 + 2);
     addch(c);
 }
 
@@ -524,7 +559,7 @@ void Game::clearscr() {
         move(i, 41);
         printw("                                      "); // 38 spaces
     }
-    for (int i = 22; i < 26; i++) {
+    for (int i = 22; i < 28; i++) {
         move(i, 0);
         clrtoeol();
     }

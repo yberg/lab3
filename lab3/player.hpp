@@ -15,7 +15,7 @@
 
 class Player : public Entity {
 private:
-    int _balance, _level, _damage, _exp;
+    int _balance, _level, _base_damage, _exp;
     vector<Item*> _inventory;
 protected:
 public:
@@ -25,11 +25,15 @@ public:
     virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);
+    virtual int damage() const;
+    
+    int block() const;
     
     int balance() const;
     int level() const;
-    int damage() const;
+    int base_damage() const;
     int exp() const;
+    int max_exp() const;
     
     void balance(int);
     void level(int);

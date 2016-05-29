@@ -23,7 +23,8 @@ public:
     virtual bool fight(const Entity&) = 0;
     virtual bool talk_to(const Entity&) = 0;
     
-    virtual int damage();
+    virtual int damage() const;
+    virtual void damage(int);
     
 };
 

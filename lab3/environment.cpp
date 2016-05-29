@@ -21,16 +21,16 @@ Environment::~Environment() {
     
 }
 
-Item& Environment::neighbor(const char direction) {
+/*Item& Environment::neighbor(const char direction) {
     Container * c = new Container();
     return *c;
-}
+}*/
 
 /*bool Environment::enter(const Entity& entity) {
     return false;
-}
+}*/
 
-bool Environment::leave(const Entity& entity) {
+/*bool Environment::leave(const Entity& entity) {
     return false;
 }*/
 

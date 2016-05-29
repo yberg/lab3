@@ -7,15 +7,17 @@
 //
 
 #include "monster.hpp"
+#include <iostream>
 #include "player.hpp"
 #include "weapon.hpp"
+#include "constants.hpp"
 
-Monster::Monster(string type, string name, int hp, int damage) {
+Monster::Monster(string type, string name) {
     _type = type;
     _name = name;
-    _hp = hp;
-    _max_hp = hp;
-    _damage = damage;
+    _hp = 1;
+    _max_hp = 1;
+    _damage = Constants::ENEMY_BASE_DAMAGE;
 }
 
 Monster::~Monster() {
@@ -24,12 +26,9 @@ Monster::~Monster() {
 
 void Monster::action(Entity* entity, Item* item) {
     if (Player* player = dynamic_cast<Player*>(entity)) {
-        int damage = this->damage();
-        for (auto it = player->inventory().begin(); it != player->inventory().end(); ++it) {
-            if (Weapon* weapon = dynamic_cast<Weapon*>(*it)) {
-                damage -= weapon->block();
-            }
-        }
+        int damage = (rand() % (int)(this->damage() * Constants::DAMAGE_PER_LEVEL_MULTIPLIER)) + 1;
+        //damage = this->damage() * Constants::DAMAGE_PER_LEVEL_MULTIPLIER;
+        damage -= player->block();
         damage = max(0, damage);
         player->hp(max(0, player->hp() - damage));
     }

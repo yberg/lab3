@@ -8,7 +8,7 @@
 
 #include "inside.hpp"
 
-Inside::Inside() {
+Inside::Inside() : _has_enemy(false) {
     
 }
 
@@ -18,4 +18,8 @@ Inside::~Inside() {
 
 bool Inside::has_enemy() {
     return _has_enemy;
+}
+
+void Inside::has_enemy(bool has_enemy) {
+    _has_enemy = has_enemy;
 }

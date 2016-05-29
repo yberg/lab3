@@ -15,9 +15,10 @@
 #include "constants.hpp"
 
 Player::Player(string name) :
-_damage(Constants::PLAYER_BASE_DAMAGE), _exp(0) {
+_base_damage(Constants::PLAYER_BASE_DAMAGE), _exp(1) {
     _type = "Player";
     _name = name;
+    _max_hp = Constants::PLAYER_START_HP;
     
     srand((unsigned int)time(NULL));
 }
@@ -30,12 +31,15 @@ void Player::action(Entity* entity, Item* item) {
     if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
         int damage;
         if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
-            damage = (rand() % weapon->damage());
+            damage = (rand() % weapon->damage()) + 1 + _base_damage;
         }
         else {
-            damage = (rand() % this->damage());
+            damage = (rand() % this->base_damage()) + 1;
         }
         enemy->hp(max(0, enemy->hp() - damage));
+    }
+    if (Potion* potion = dynamic_cast<Potion*>(item)) {
+        _hp = min(_max_hp, _hp + potion->healing());
     }
 }
 
@@ -47,6 +51,30 @@ bool Player::talk_to(const Entity& entity) {
     return false;
 }
 
+int Player::damage() const {
+    int max_dmg = 0;
+    for (auto it = _inventory.begin(); it != _inventory.end(); ++it) {
+        if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
+            if (w->damage() > max_dmg) {
+                max_dmg = w->damage();
+            }
+        }
+    }
+    return max_dmg;
+}
+
+int Player::block() const {
+    int max_block = 0;
+    for (auto it = _inventory.begin(); it != _inventory.end(); ++it) {
+        if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
+            if (w->block() > max_block) {
+                max_block = w->block();
+            }
+        }
+    }
+    return max_block;
+}
+
 int Player::balance() const {
     return _balance;
 }
@@ -55,12 +83,16 @@ int Player::level() const {
     return _level;
 }
 
-int Player::damage() const {
-    return _damage;
+int Player::base_damage() const {
+    return _base_damage * _level;
 }
 
 int Player::exp() const {
     return _exp;
+}
+
+int Player::max_exp() const {
+    return Constants::EXP[_level - 1];
 }
 
 void Player::balance(int balance) {
@@ -72,7 +104,19 @@ void Player::level(int level) {
 }
 
 void Player::exp(int exp) {
-    _exp = exp;
+    if (exp >= Constants::EXP[_level - 1]) {
+        _exp = exp - Constants::EXP[_level - 1];
+        _level += 1;
+        _max_hp += 10;
+        _hp += 10;
+    }
+    else {
+        _exp = exp;
+    }
+    
+    if (_exp == 0) {
+        _exp = 1;
+    }
 }
 
 bool Player::buy(Item* item) {
@@ -82,7 +126,7 @@ bool Player::buy(Item* item) {
     _balance -= item->price();
     
     if (Potion* potion = dynamic_cast<Potion*>(item)) {
-        _hp = min(100, _hp + potion->healing());
+        action(nullptr, potion);
     }
     else if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {  // Add to inventory
         const string name = weapon->name();
