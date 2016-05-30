@@ -12,6 +12,7 @@
 #include "constants.hpp"
 #include "environment.hpp"
 #include "house.hpp"
+#include "player.hpp"
 
 using namespace std;
 
@@ -51,34 +52,34 @@ bool Entity::is_alive() const {
     return _hp > 0;
 }
 
-bool Entity::go(const char direction, const vector<vector<Environment*>>& env) {
+bool Entity::go(const char direction, const vector<vector<Environment*>>& env, bool has_key) {
     int &row = _position.row;
     int &col = _position.col;
     switch (direction) {
         case Direction::UP:
             if (row <= 0) return false;
-            if (enter(env.at(row).at(col), env.at(row-1).at(col), direction)) {
+            if (enter(env.at(row).at(col), env.at(row-1).at(col), direction, has_key)) {
                 row -= 1;
                 return true;
             }
             break;
         case Direction::DOWN:
             if (row >= Constants::WORLD_SIZE-1) return false;
-            if (enter(env.at(row).at(col), env.at(row+1).at(col), direction)) {
+            if (enter(env.at(row).at(col), env.at(row+1).at(col), direction, has_key)) {
                 row += 1;
                 return true;
             }
             break;
         case Direction::RIGHT:
             if (col >= Constants::WORLD_SIZE-1) return false;
-            if (enter(env.at(row).at(col), env.at(row).at(col+1), direction)) {
+            if (enter(env.at(row).at(col), env.at(row).at(col+1), direction, has_key)) {
                 col += 1;
                 return true;
             }
             break;
         case Direction::LEFT:
             if (col <= 0) return false;
-            if (enter(env.at(row).at(col), env.at(row).at(col-1), direction)) {
+            if (enter(env.at(row).at(col), env.at(row).at(col-1), direction, has_key)) {
                 col -= 1;
                 return true;
             }
@@ -90,18 +91,26 @@ bool Entity::go(const char direction, const vector<vector<Environment*>>& env) {
     return false;
 }
 
-bool Entity::enter(Environment * src, Environment * dest, const char direction) {
-    if (src->description().environment == "House") {
-        if (dest->description().environment == "House") {
-            return true;
+bool Entity::enter(Environment * src, Environment * dest, const char direction, bool has_key) {
+    if (dynamic_cast<House*>(src)) {
+        if (House* dest_house = dynamic_cast<House*>(dest)) {
+            if (dest_house->req_key()) {
+                return has_key;
+            }
+            else {
+                return true;
+            }
         }
         else if (((House*)src)->exit() == direction) {
             return true;
         }
     }
-    else if (dest->description().environment == "House") {
-        if (((House*)dest)->entrance() == direction) {
-            return true;
+    else if (House* dest_house = dynamic_cast<House*>(dest)) {
+        if (dest_house->entrance() == direction) {
+            if (dest_house->req_key())
+                return has_key;
+            else
+                return true;
         }
     }
     else {

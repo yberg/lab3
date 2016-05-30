@@ -13,6 +13,7 @@
 #include "item.hpp"
 #include "weapon.hpp"
 #include "potion.hpp"
+#include "monster.hpp"
 
 namespace Constants {
     
@@ -35,9 +36,17 @@ namespace Constants {
     static const double DAMAGE_PER_LEVEL_MULTIPLIER = 1.2;
     
     static std::vector<Item*> STORE = {
-        new Weapon("Sword", 3, 2, 12),
+        new Weapon("Sword", 3, 0, 12),
         new Weapon("Shield", 2, 3, 6),
-        new Potion("Health potion", 10, 2)
+        new Potion("Healing potion", 10, 2)
+    };
+    
+    static std::vector<std::pair<std::string, std::string>> MONSTERS = {
+        std::make_pair("Wizard", "Kalle"),
+        std::make_pair("Lion", "Simba"),
+        std::make_pair("Demon", "Abalam"),
+        std::make_pair("Villager", "Joe"),
+        std::make_pair("Knight", "Lancelot")
     };
 
 };

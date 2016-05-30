@@ -13,12 +13,14 @@
 #include "enemy.hpp"
 #include "weapon.hpp"
 #include "constants.hpp"
+#include "key.hpp"
 
 Player::Player(string name) :
 _base_damage(Constants::PLAYER_BASE_DAMAGE), _exp(1) {
     _type = "Player";
     _name = name;
     _max_hp = Constants::PLAYER_START_HP;
+    _has_key = false;
     
     srand((unsigned int)time(NULL));
 }
@@ -38,8 +40,14 @@ void Player::action(Entity* entity, Item* item) {
         }
         enemy->hp(max(0, enemy->hp() - damage));
     }
-    if (Potion* potion = dynamic_cast<Potion*>(item)) {
+    else if (Potion* potion = dynamic_cast<Potion*>(item)) {
         _hp = min(_max_hp, _hp + potion->healing());
+        for (auto it = this->_inventory.begin(); it != this->_inventory.end(); ++it) {
+            if ((*it)->name() == potion->name()) {
+                _inventory.erase(it);
+                break;
+            }
+        }
     }
 }
 
@@ -95,6 +103,10 @@ int Player::max_exp() const {
     return Constants::EXP[_level - 1];
 }
 
+bool Player::has_key() const {
+    return _has_key;
+}
+
 void Player::balance(int balance) {
     _balance = balance;
 }
@@ -119,16 +131,17 @@ void Player::exp(int exp) {
     }
 }
 
+void Player::has_key(bool has_key) {
+    _has_key = has_key;
+}
+
 bool Player::buy(Item* item) {
     if (item->price() > _balance)
         return false;
     
     _balance -= item->price();
     
-    if (Potion* potion = dynamic_cast<Potion*>(item)) {
-        action(nullptr, potion);
-    }
-    else if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {  // Add to inventory
+    if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {  // Add to inventory
         const string name = weapon->name();
         auto it = find_if(this->inventory().begin(), this->inventory().end(), [&name](const Item* i) {return i->name() == name;});
         if (it != this->inventory().end()) {
@@ -141,6 +154,21 @@ bool Player::buy(Item* item) {
         }
         item->price(item->price() * Constants::STORE_PRICE_MULTIPLIER);  // Update price in store
     }
+    else if (Potion* potion = dynamic_cast<Potion*>(item)) {
+        _inventory.push_back(potion);
+    }
+    
+    /* Sort the vector to put potions and keys last */
+    std::sort(_inventory.begin(), _inventory.end(),
+        [] (Item* item1, Item* item2)
+        {
+            if (dynamic_cast<Potion*>(item2))
+                return true;
+            if (dynamic_cast<Key*>(item2))
+                return true;
+            return false;
+        }
+    );
     
     return true;
 }

@@ -9,12 +9,16 @@
 #include "house.hpp"
 #include "direction.hpp"
 
-House::House() {
+House::House(bool req_key) : _entrance(Direction::UP), _exit((_entrance + 2) % 4), _req_key(req_key) {
     _entrance = Direction::UP;
     _exit = (_entrance + 2) % 4;
     _has_enemy = true;
     
-    _environment = "House";
+    if (req_key)
+        _environment = "Superhouse";
+    else
+        _environment = "House";
+    
     _items = vector<Item*>();
     _entities = vector<Entity*>();
 }
@@ -33,4 +37,8 @@ char House::entrance() {
 
 char House::exit() {
     return _exit;
+}
+
+bool House::req_key() const {
+    return _req_key;
 }

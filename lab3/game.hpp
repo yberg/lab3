@@ -34,6 +34,7 @@ public:
     void draw_player();
     void draw_info();
     void draw_inventory();
+    void draw_status();
     void draw_buymenu();
     void draw_fight();
     

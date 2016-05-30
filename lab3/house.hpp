@@ -13,16 +13,18 @@
 
 class House : public Inside {
 private:
-    char _entrance, _exit;
+    char _entrance, _exit, _req_key;
 protected:
 public:
-    House();
+    House(bool);
     ~House();
     
     virtual vector<const char> directions();
     
     char entrance();
     char exit();
+    
+    bool req_key() const;
 };
 
 #endif /* house_hpp */

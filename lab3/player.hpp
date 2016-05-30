@@ -17,6 +17,7 @@ class Player : public Entity {
 private:
     int _balance, _level, _base_damage, _exp;
     vector<Item*> _inventory;
+    bool _has_key;
 protected:
 public:
     Player(string);
@@ -34,10 +35,13 @@ public:
     int base_damage() const;
     int exp() const;
     int max_exp() const;
+    bool has_key() const;
     
     void balance(int);
     void level(int);
     void exp(int);
+    void has_key(bool);
+    
     bool buy(Item*);
     vector<Item*>& inventory();
 };

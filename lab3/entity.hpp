@@ -20,7 +20,7 @@ class Environment;
 class Entity {
 private:
     //vector<const Item&> _items;
-    bool enter(Environment*, Environment*, const char);
+    bool enter(Environment*, Environment*, const char, bool);
 protected:
     string _type, _name;
     int _hp, _max_hp, _base_dmg;
@@ -46,7 +46,7 @@ public:
     virtual void max_hp(int);
     virtual bool is_alive() const;
     
-    bool go(const char, const vector<vector<Environment*>>&);
+    bool go(const char, const vector<vector<Environment*>>&, bool);
     Position position();
     bool pick_up(const Item&);
     bool drop(const Item&);

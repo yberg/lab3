@@ -20,7 +20,7 @@ int main(int argc, const char * argv[]) {
     //Monster monster("Monsterkalle", 50, 10);
     //cout << monster.name() << ": hp: " << monster.hp() << ", damage: " << monster.damage() << endl;
     
-    House house;
+    House house(false);
     cout << house.description().environment << endl;
     
     Player player("Viktor");
