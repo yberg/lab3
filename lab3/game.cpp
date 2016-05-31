@@ -62,6 +62,8 @@ vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
 vector<vector<Entity*>> entities(Constants::WORLD_SIZE);
 vector<vector<Item*>> items(Constants::WORLD_SIZE);
 
+vector<Item*> store;
+
 bool playing, pause_before_exit, show_buymenu, show_fight;
 string status_first, status_second;
 
@@ -119,11 +121,10 @@ Game::~Game() {
             delete (*it2);
         }
     }
-    player.inventory().clear();
     for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
         delete (*it);
     }
-    for (auto it = Constants::STORE.begin(); it != Constants::STORE.end(); ++it) {
+    for (auto it = store.begin(); it != store.end(); ++it) {
         delete (*it);
     }
 }
@@ -176,6 +177,12 @@ void Game::init_game() {
     player.balance(Constants::PLAYER_START_BALANCE);
     player.level(Constants::PLAYER_START_LEVEL);
     player.hp(Constants::PLAYER_START_HP);
+    
+    store = {
+        new Weapon("Sword", 3, 0, 12),
+        new Weapon("Shield", 2, 3, 6),
+        new Potion("Healing potion", 10, 2)
+    };
 }
 
 void Game::quit() {
@@ -235,9 +242,9 @@ void Game::run() {
             show_buymenu = !show_buymenu;
         }
         else if (show_buymenu) {
-            for (unsigned i = 0; i < Constants::STORE.size(); ++i) {
+            for (unsigned i = 0; i < store.size(); ++i) {
                 if (k == (char)(i+49)) {
-                    player.buy(Constants::STORE.at(i));
+                    player.buy(store.at(i));
                 }
             }
         }
@@ -612,7 +619,7 @@ void Game::draw_buymenu() {
     attroff(A_UNDERLINE);
     
     int choice = 1, i = 2;
-    for (auto it = Constants::STORE.begin(); it != Constants::STORE.end(); ++it) {
+    for (auto it = store.begin(); it != store.end(); ++it) {
         move(i++, 50);
         printw("%d. $%-3d %s", choice++, (*it)->price(), (*it)->name().c_str());
         if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
