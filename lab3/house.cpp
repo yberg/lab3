@@ -27,8 +27,8 @@ House::~House() {
     
 }
 
-vector<const char> House::directions() {
-    return vector<const char>();
+vector<char> House::directions() {
+    return vector<char>();
 }
 
 char House::entrance() {

@@ -18,7 +18,7 @@ public:
     Water();
     virtual ~Water();
     
-    virtual vector<const char> directions();
+    virtual vector<char> directions();
 };
 
 #endif /* water_hpp */

@@ -18,6 +18,6 @@ Grass::~Grass() {
     
 }
 
-vector<const char> Grass::directions() {
-    return vector<const char>();
+vector<char> Grass::directions() {
+    return vector<char>();
 }

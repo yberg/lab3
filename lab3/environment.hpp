@@ -25,7 +25,7 @@ public:
     Environment();
     virtual ~Environment();
     
-    virtual vector<const char> directions() = 0;
+    virtual vector<char> directions() = 0;
     
     virtual struct Description description();
 

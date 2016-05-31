@@ -18,7 +18,7 @@ public:
     Grass();
     virtual ~Grass();
     
-    virtual vector<const char> directions();
+    virtual vector<char> directions();
 };
 
 #endif /* grass_hpp */

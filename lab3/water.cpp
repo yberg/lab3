@@ -18,6 +18,6 @@ Water::~Water() {
     
 }
 
-vector<const char> Water::directions() {
-    return vector<const char>();
+vector<char> Water::directions() {
+    return vector<char>();
 }

@@ -19,7 +19,7 @@ public:
     Inside();
     virtual ~Inside();
     
-    virtual vector<const char> directions() = 0;
+    virtual vector<char> directions() = 0;
     
     virtual bool has_enemy();
     

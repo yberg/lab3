@@ -18,7 +18,7 @@ public:
     Outside();
     virtual ~Outside();
     
-    virtual vector<const char> directions() = 0;
+    virtual vector<char> directions() = 0;
 };
 
 #endif /* outside_hpp */

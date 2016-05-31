@@ -234,7 +234,7 @@ void Game::run() {
             show_buymenu = !show_buymenu;
         }
         else if (show_buymenu) {
-            for (int i = 0; i < Constants::STORE.size(); ++i) {
+            for (unsigned i = 0; i < Constants::STORE.size(); ++i) {
                 if (k == (char)(i+49)) {
                     player.buy(Constants::STORE.at(i));
                 }
@@ -299,7 +299,7 @@ void Game::fight(Enemy* enemy) {
             }
         }
         else {
-            for (int i = 0; i < player.inventory().size(); ++i) {
+            for (unsigned i = 0; i < player.inventory().size(); ++i) {
                 if (k == (char)(i+49)) {
                     item = player.inventory().at(i);
                     if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {

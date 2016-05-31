@@ -19,7 +19,7 @@ public:
     House(bool);
     virtual ~House();
     
-    virtual vector<const char> directions();
+    virtual vector<char> directions();
     
     char entrance();
     char exit();
