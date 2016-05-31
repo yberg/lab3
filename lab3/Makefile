@@ -12,7 +12,7 @@ run: all
 	./spel
 
 %.o: %.c
-	$(CXX) $@ -c $< -lncurses # $^ first .cpp
+	$(CXX) $@ -c $< -lncurses # $< first .cpp
 
 clean: 
 	rm -f *.o
