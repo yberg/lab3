@@ -17,7 +17,7 @@ protected:
     int _damage;
 public:
     Enemy();
-    ~Enemy();
+    virtual ~Enemy();
     
     virtual void action(Entity*, Item*) = 0;
     virtual bool fight(const Entity&) = 0;

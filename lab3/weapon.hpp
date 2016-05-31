@@ -17,7 +17,7 @@ private:
 protected:
 public:
     Weapon(string, int, int, int);
-    ~Weapon();
+    virtual ~Weapon();
     
     int damage() const;
     int block() const;

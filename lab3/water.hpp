@@ -16,10 +16,9 @@ private:
 protected:
 public:
     Water();
-    ~Water();
+    virtual ~Water();
     
     virtual vector<const char> directions();
-    virtual struct Description& description();
 };
 
 #endif /* water_hpp */

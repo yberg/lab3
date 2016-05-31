@@ -16,7 +16,7 @@ private:
 protected:
 public:
     Container();
-    ~Container();
+    virtual ~Container();
     
     int hold_weight();
     int hold_volume();

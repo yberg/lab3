@@ -17,7 +17,7 @@ private:
 protected:
 public:
     Potion(string, int, int);
-    ~Potion();
+    virtual ~Potion();
     
     int healing();
 };

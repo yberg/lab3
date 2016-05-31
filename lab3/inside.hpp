@@ -17,7 +17,7 @@ protected:
     bool _has_enemy = false;
 public:
     Inside();
-    ~Inside();
+    virtual ~Inside();
     
     virtual vector<const char> directions() = 0;
     

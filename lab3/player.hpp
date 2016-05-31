@@ -21,7 +21,7 @@ private:
 protected:
 public:
     Player(string);
-    ~Player();
+    virtual ~Player();
 
     virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);

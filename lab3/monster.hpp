@@ -16,7 +16,7 @@ private:
 protected:
 public:
     Monster(string, string);
-    ~Monster();
+    virtual ~Monster();
 
     virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);

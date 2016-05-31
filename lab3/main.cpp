@@ -17,18 +17,11 @@
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    //Monster monster("Monsterkalle", 50, 10);
-    //cout << monster.name() << ": hp: " << monster.hp() << ", damage: " << monster.damage() << endl;
     
-    House house(false);
-    cout << house.description().environment << endl;
-    
-    Player player("Viktor");
-    cout << player.name() << endl;
-    
-    cout << endl << "Price before: " << Constants::STORE.at(0)->price() << endl;
-    Constants::STORE.at(0)->price(Constants::STORE.at(0)->price() * 2);
-    cout << "Price after: " << Constants::STORE.at(0)->price() << endl;
+    /*Player player("Viktor");
+    vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
+    vector<vector<Entity*>> entities(Constants::WORLD_SIZE);
+    vector<vector<Item*>> items(Constants::WORLD_SIZE);*/
     
     Game game;
     

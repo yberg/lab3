@@ -16,10 +16,9 @@ private:
 protected:
 public:
     Outside();
-    ~Outside();
+    virtual ~Outside();
     
     virtual vector<const char> directions() = 0;
-    virtual struct Description& description() = 0;
 };
 
 #endif /* outside_hpp */

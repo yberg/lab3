@@ -20,7 +20,7 @@ protected:
     string _name;
 public:
     Item();
-    ~Item();
+    virtual ~Item();
     
     virtual int weight() const;
     virtual int volume() const;

@@ -9,7 +9,9 @@
 #include "grass.hpp"
 
 Grass::Grass() {
-    
+    _environment = "Grass";
+    _items = vector<Item*>();
+    _entities = vector<Entity*>();
 }
 
 Grass::~Grass() {
@@ -18,12 +20,4 @@ Grass::~Grass() {
 
 vector<const char> Grass::directions() {
     return vector<const char>();
-}
-
-struct Description& Grass::description() {
-    Description * d = new Description();
-    d->environment = "Grass";
-    d->items = vector<Item*>();
-    d->entities = vector<Entity*>();
-    return *d;
 }

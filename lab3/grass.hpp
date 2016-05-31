@@ -16,10 +16,9 @@ private:
 protected:
 public:
     Grass();
-    ~Grass();
+    virtual ~Grass();
     
     virtual vector<const char> directions();
-    virtual struct Description& description();
 };
 
 #endif /* grass_hpp */

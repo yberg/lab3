@@ -23,11 +23,11 @@ protected:
     vector<Entity*> _entities;
 public:
     Environment();
-    ~Environment();
+    virtual ~Environment();
     
     virtual vector<const char> directions() = 0;
     
-    virtual struct Description& description();
+    virtual struct Description description();
 
     Item& neighbor(const char);
     bool enter(const Entity&);

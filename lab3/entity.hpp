@@ -26,7 +26,7 @@ protected:
     int _hp, _max_hp, _base_dmg;
 public:
     Entity();
-    ~Entity();
+    virtual ~Entity();
     
     struct Position {
         int row, col;

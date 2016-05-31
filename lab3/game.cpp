@@ -61,7 +61,7 @@ vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
 vector<vector<Entity*>> entities(Constants::WORLD_SIZE);
 vector<vector<Item*>> items(Constants::WORLD_SIZE);
 
-bool playing, show_buymenu, show_fight;
+bool playing, pause_before_exit, show_buymenu, show_fight;
 string status_first, status_second;
 
 Game::Game() {
@@ -76,7 +76,7 @@ Game::Game() {
             if (r < 1 && j != Constants::WORLD_SIZE - 1) {
                 if (!superhouse && rand() % 20 == 0) {
                     environment.at(i).push_back(new House(true));
-                    entities.at(i).push_back(new Monster("Final boss", "King Arthur"));
+                    entities.at(i).push_back(new Monster("Final boss", "Dr. Dark"));
                     superhouse = true;
                 }
                 else {
@@ -103,7 +103,28 @@ Game::Game() {
 }
 
 Game::~Game() {
-    
+    for (auto it = environment.begin(); it != environment.end(); ++it) {
+        for (auto it2 = (*it).begin(); it2 != (*it).end(); ++it2) {
+            delete (*it2);
+        }
+    }
+    for (auto it = entities.begin(); it != entities.end(); ++it) {
+        for (auto it2 = (*it).begin(); it2 != (*it).end(); ++it2) {
+            delete (*it2);
+        }
+    }
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        for (auto it2 = (*it).begin(); it2 != (*it).end(); ++it2) {
+            delete (*it2);
+        }
+    }
+    player.inventory().clear();
+    for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
+        delete (*it);
+    }
+    for (auto it = Constants::STORE.begin(); it != Constants::STORE.end(); ++it) {
+        delete (*it);
+    }
 }
 
 void Game::init_screen() {
@@ -135,10 +156,17 @@ void Game::init_screen() {
 
 void Game::intro() {
     return; // remove
-    putstr("Press p to play", 0, 0);
+    move(5, 10);
+    attron(COLOR_PAIR(RED_BG));
+    printw("Dr. Dark");
+    attroff(COLOR_PAIR(RED_BG));
+    printw(" has locked himself in a house");
+    putstr("with a hostage.", 6, 10);
+    putstr("Defeat the monsters, find the key to", 8, 10);
+    putstr("his house and kill him.", 9, 10);
+    putstr("Press p to play.", 12, 10);
     int input = getch();
     while (input != 'p') {
-        putch(input, 10, 10);
         input = getch();
     }
 }
@@ -159,8 +187,7 @@ void Game::quit() {
         int r = getch();
         if (r == 'y') {
             playing = false;
-            endwin();
-            exit(0);
+            pause_before_exit = false;
             break;
         }
         else if (r == 'n') {
@@ -181,10 +208,15 @@ void Game::run() {
     dirs[KEY_LEFT] = Direction::LEFT;
     
     playing = true;
+    pause_before_exit = true;
+    
     while (playing && player.is_alive()) {
         int k = getch();
         if (k == KEY_UP || k == KEY_DOWN || k == KEY_RIGHT || k == KEY_LEFT) {
-            player.go(dirs[k], environment, player.has_key());
+            if (!player.go(dirs[k], environment, player.has_key())) {
+                status_first = "You can't enter without a key";
+                status_second = "";
+            }
             if ((enemy = dynamic_cast<Enemy*>(entities.at(player.position().row).at(player.position().col))) != NULL) {
                 show_fight = true;
                 show_buymenu = false;
@@ -225,12 +257,13 @@ void Game::run() {
             fight(enemy);
         }
     }
-    while (1) {
+    while (pause_before_exit) {
         if (getch() == 'q') {  // Quit
             quit();
         }
         draw();
     };
+    endwin();
 }
 
 void Game::fight(Enemy* enemy) {
@@ -285,7 +318,7 @@ void Game::fight(Enemy* enemy) {
                 status_first = "Healed for " + to_string(player.hp() - player_hp);
             }
             else {
-                status_first = "Damaged " + enemy->name() + " for " + to_string(enemy_hp - enemy->hp());
+                status_first = "You damaged " + enemy->name() + " for " + to_string(enemy_hp - enemy->hp());
             }
             status_second = enemy->name() + " damaged you for " + to_string(player_hp - player.hp());
             
@@ -299,9 +332,10 @@ void Game::fight(Enemy* enemy) {
             player.balance(player.balance() + enemy->max_hp()/10);
             player.exp(player.exp() + enemy->max_hp()/20);
             
-            status_first = "Defeated " + enemy->type() + " " + enemy->name();
+            status_first = "You defeated " + enemy->name() + " (" + enemy->type() + ")";
             status_second = "";
             if (enemy->type() == "Final boss") {
+                status_second = "You won the game";
                 playing = false;
             }
             else if (player.level() == Constants::MAX_LEVEL) {
@@ -397,8 +431,11 @@ void Game::draw_player() {
         color = COLOR_PAIR(PLAYER_WATER);
     else if (environment.at(pos.row).at(pos.col)->description().environment == "Grass")
         color = COLOR_PAIR(PLAYER_GRASS);
+    
+    move(pos.row + 1, pos.col * 2 + 1);
     attron(color);
-    putch('@', pos.row, pos.col);
+    addch('(');
+    addch(')');
     attroff(color);
 }
 
@@ -409,7 +446,7 @@ void Game::draw_info() {
     
     // Level
     move(22, 2);
-    printw("Level %d", player.level());
+    printw("Level %d/%d", player.level(), Constants::MAX_LEVEL);
     move(22, 16 - ceil(log10(player.max_exp()+1)));
     printw("%3d/%d", player.exp(), player.max_exp());
     
@@ -512,6 +549,11 @@ void Game::draw_inventory() {
     if (!show_buymenu)
         attroff(COLOR_PAIR(GREEN_BG));
     
+    if (show_fight) {
+        move(i++, 50);
+        printw("0. Kick");
+    }
+    
     Weapon* w = nullptr;
     for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
         w = nullptr;
@@ -546,13 +588,10 @@ void Game::draw_inventory() {
     }
 
     move(i, 50);
-    if (show_fight) {
-        printw("0. Kick");
-    }
-    else if (i == i_start + 1) {
+    if (!show_fight && i == i_start + 1) {
         attron(COLOR_PAIR(YELLOW_BG));
-            printw("Empty");
-            attroff(COLOR_PAIR(YELLOW_BG));
+        printw("Empty");
+        attroff(COLOR_PAIR(YELLOW_BG));
     }
 }
 

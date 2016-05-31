@@ -17,7 +17,7 @@ private:
 protected:
 public:
     House(bool);
-    ~House();
+    virtual ~House();
     
     virtual vector<const char> directions();
     

@@ -16,7 +16,7 @@ private:
 protected:
 public:
     Key(string);
-    ~Key();
+    virtual ~Key();
     
     void use();
 };
