@@ -20,6 +20,7 @@
 #include <ncurses.h>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 #include "house.hpp"
 #include "water.hpp"
 #include "grass.hpp"

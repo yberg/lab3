@@ -49,6 +49,6 @@ namespace Constants {
         std::make_pair("Knight", "Lancelot")
     };
 
-};
+}
 
 #endif /* constants_h */
