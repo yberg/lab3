@@ -132,7 +132,7 @@ Game::~Game() {
 void Game::init_screen() {
     initscr();
     noecho();
-    //raw();  // Disable CTRL-C etc.
+    raw();  // Disable CTRL-C etc.
     start_color();
     keypad(stdscr, true);
     curs_set(0);
@@ -352,6 +352,8 @@ void Game::fight(Enemy* enemy) {
                 if (it == player.inventory().end()) {
                     player.inventory().push_back(new Key("Super key"));
                     player.has_key(true);
+                    status_first = "You retreived the Super key";
+                    status_second = "Find Dr. Dark and kill him";
                 }
             }
         }
@@ -360,7 +362,6 @@ void Game::fight(Enemy* enemy) {
 }
 
 void Game::draw() {
-    //clear(); // flickering
     clearscr();
     
     draw_edges();
@@ -377,8 +378,7 @@ void Game::draw() {
 
 void Game::draw_edges() {
     // Edges
-    if (show_fight)
-        attron(RED_BG);
+    show_fight ? attron(COLOR_PAIR(RED_BG)) : attron(COLOR_PAIR(GREEN_BG));
     for (int i = 1; i <= Constants::WORLD_SIZE*2; i++) {
         move(0, i);
         addch(115 | A_ALTCHARSET);
@@ -391,8 +391,7 @@ void Game::draw_edges() {
         move(i, Constants::WORLD_SIZE*2 + 1);
         addch(ACS_VLINE);
     }
-    if (show_fight)
-        attroff(RED_BG);
+    show_fight ? attroff(COLOR_PAIR(RED_BG)) : attroff(COLOR_PAIR(GREEN_BG));
 }
 
 void Game::draw_environment() {
