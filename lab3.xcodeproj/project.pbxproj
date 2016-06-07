@@ -10,7 +10,6 @@
 		C000CB1C1C3D658B0030870A /* outside.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB1A1C3D658B0030870A /* outside.cpp */; };
 		C000CB241C3D6C710030870A /* inside.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB221C3D6C710030870A /* inside.cpp */; };
 		C000CB271C3D6E870030870A /* house.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB251C3D6E870030870A /* house.cpp */; };
-		C000CB2C1C3D88D50030870A /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB2A1C3D88D50030870A /* game.cpp */; };
 		C000CB2E1C3DC4F30030870A /* libncurses.5.4.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C000CB2D1C3DC4F30030870A /* libncurses.5.4.tbd */; };
 		C000CB2F1C3DC5490030870A /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C067DF381C3C356C007938D5 /* item.cpp */; };
 		C000CB321C3DCC5C0030870A /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB301C3DCC5C0030870A /* player.cpp */; };
@@ -22,7 +21,28 @@
 		C067DF371C3C3321007938D5 /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C067DF351C3C3321007938D5 /* environment.cpp */; };
 		C067DF3D1C3C3A78007938D5 /* container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C067DF3B1C3C3A78007938D5 /* container.cpp */; };
 		C067DF401C3C780C007938D5 /* monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C067DF3E1C3C780C007938D5 /* monster.cpp */; };
+		C0A594BB1CF609EA0004CF62 /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C000CB2A1C3D88D50030870A /* game.cpp */; };
+		C0A594BE1CF639CF0004CF62 /* weapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A594BC1CF639CF0004CF62 /* weapon.cpp */; };
+		C0A594C11CF63BDE0004CF62 /* potion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A594BF1CF63BDE0004CF62 /* potion.cpp */; };
+		C0F6F8DE1CFB20E2004AE83B /* key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6F8DC1CFB20E2004AE83B /* key.cpp */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C0053A2A1CFD163F00A1E69E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C067DF191C3C154B007938D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0053A0E1CFD163E00A1E69E;
+			remoteInfo = asdk;
+		};
+		C0053A351CFD163F00A1E69E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C067DF191C3C154B007938D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0053A0E1CFD163E00A1E69E;
+			remoteInfo = asdk;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C067DF1F1C3C154B007938D5 /* CopyFiles */ = {
@@ -43,7 +63,7 @@
 		C000CB231C3D6C710030870A /* inside.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = inside.hpp; sourceTree = "<group>"; };
 		C000CB251C3D6E870030870A /* house.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = house.cpp; sourceTree = "<group>"; };
 		C000CB261C3D6E870030870A /* house.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = house.hpp; sourceTree = "<group>"; };
-		C000CB2A1C3D88D50030870A /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
+		C000CB2A1C3D88D50030870A /* game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; tabWidth = 4; wrapsLines = 1; };
 		C000CB2B1C3D88D50030870A /* game.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = game.hpp; sourceTree = "<group>"; };
 		C000CB2D1C3DC4F30030870A /* libncurses.5.4.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.5.4.tbd; path = usr/lib/libncurses.5.4.tbd; sourceTree = SDKROOT; };
 		C000CB301C3DCC5C0030870A /* player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
@@ -53,6 +73,9 @@
 		C000CB351C40235A0030870A /* water.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = water.hpp; sourceTree = "<group>"; };
 		C000CB371C403BAB0030870A /* grass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = grass.cpp; sourceTree = "<group>"; };
 		C000CB381C403BAB0030870A /* grass.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = grass.hpp; sourceTree = "<group>"; };
+		C0053A0F1CFD163E00A1E69E /* asdk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = asdk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0053A291CFD163F00A1E69E /* asdkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = asdkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0053A341CFD163F00A1E69E /* asdkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = asdkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C067DF211C3C154B007938D5 /* lab3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = lab3; sourceTree = BUILT_PRODUCTS_DIR; };
 		C067DF241C3C154B007938D5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C067DF2E1C3C2BF4007938D5 /* enemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enemy.cpp; sourceTree = "<group>"; };
@@ -68,9 +91,36 @@
 		C067DF3C1C3C3A78007938D5 /* container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = container.hpp; sourceTree = "<group>"; };
 		C067DF3E1C3C780C007938D5 /* monster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monster.cpp; sourceTree = "<group>"; };
 		C067DF3F1C3C780C007938D5 /* monster.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = monster.hpp; sourceTree = "<group>"; };
+		C0A594BC1CF639CF0004CF62 /* weapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = weapon.cpp; sourceTree = "<group>"; };
+		C0A594BD1CF639CF0004CF62 /* weapon.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = weapon.hpp; sourceTree = "<group>"; };
+		C0A594BF1CF63BDE0004CF62 /* potion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = potion.cpp; sourceTree = "<group>"; };
+		C0A594C01CF63BDE0004CF62 /* potion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = potion.hpp; sourceTree = "<group>"; };
+		C0F6F8DC1CFB20E2004AE83B /* key.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = key.cpp; sourceTree = "<group>"; };
+		C0F6F8DD1CFB20E2004AE83B /* key.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = key.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C0053A0C1CFD163E00A1E69E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A261CFD163F00A1E69E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A311CFD163F00A1E69E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C067DF1E1C3C154B007938D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,6 +150,12 @@
 				C067DF391C3C356C007938D5 /* item.hpp */,
 				C067DF3B1C3C3A78007938D5 /* container.cpp */,
 				C067DF3C1C3C3A78007938D5 /* container.hpp */,
+				C0A594BC1CF639CF0004CF62 /* weapon.cpp */,
+				C0A594BD1CF639CF0004CF62 /* weapon.hpp */,
+				C0A594BF1CF63BDE0004CF62 /* potion.cpp */,
+				C0A594C01CF63BDE0004CF62 /* potion.hpp */,
+				C0F6F8DC1CFB20E2004AE83B /* key.cpp */,
+				C0F6F8DD1CFB20E2004AE83B /* key.hpp */,
 			);
 			name = Item;
 			sourceTree = "<group>";
@@ -156,6 +212,9 @@
 			isa = PBXGroup;
 			children = (
 				C067DF211C3C154B007938D5 /* lab3 */,
+				C0053A0F1CFD163E00A1E69E /* asdk.app */,
+				C0053A291CFD163F00A1E69E /* asdkTests.xctest */,
+				C0053A341CFD163F00A1E69E /* asdkUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,6 +237,59 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C0053A0E1CFD163E00A1E69E /* asdk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0053A411CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdk" */;
+			buildPhases = (
+				C0053A0B1CFD163E00A1E69E /* Sources */,
+				C0053A0C1CFD163E00A1E69E /* Frameworks */,
+				C0053A0D1CFD163E00A1E69E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = asdk;
+			productName = asdk;
+			productReference = C0053A0F1CFD163E00A1E69E /* asdk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C0053A281CFD163F00A1E69E /* asdkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0053A421CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdkTests" */;
+			buildPhases = (
+				C0053A251CFD163F00A1E69E /* Sources */,
+				C0053A261CFD163F00A1E69E /* Frameworks */,
+				C0053A271CFD163F00A1E69E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0053A2B1CFD163F00A1E69E /* PBXTargetDependency */,
+			);
+			name = asdkTests;
+			productName = asdkTests;
+			productReference = C0053A291CFD163F00A1E69E /* asdkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C0053A331CFD163F00A1E69E /* asdkUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0053A431CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdkUITests" */;
+			buildPhases = (
+				C0053A301CFD163F00A1E69E /* Sources */,
+				C0053A311CFD163F00A1E69E /* Frameworks */,
+				C0053A321CFD163F00A1E69E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0053A361CFD163F00A1E69E /* PBXTargetDependency */,
+			);
+			name = asdkUITests;
+			productName = asdkUITests;
+			productReference = C0053A341CFD163F00A1E69E /* asdkUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		C067DF201C3C154B007938D5 /* lab3 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C067DF281C3C154B007938D5 /* Build configuration list for PBXNativeTarget "lab3" */;
@@ -204,6 +316,20 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Viktor Yberg";
 				TargetAttributes = {
+					C0053A0E1CFD163E00A1E69E = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 8334F4Z58G;
+					};
+					C0053A281CFD163F00A1E69E = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 8334F4Z58G;
+						TestTargetID = C0053A0E1CFD163E00A1E69E;
+					};
+					C0053A331CFD163F00A1E69E = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 8334F4Z58G;
+						TestTargetID = C0053A0E1CFD163E00A1E69E;
+					};
 					C067DF201C3C154B007938D5 = {
 						CreatedOnToolsVersion = 7.2;
 					};
@@ -215,6 +341,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = C067DF181C3C154B007938D5;
 			productRefGroup = C067DF221C3C154B007938D5 /* Products */;
@@ -222,11 +349,59 @@
 			projectRoot = "";
 			targets = (
 				C067DF201C3C154B007938D5 /* lab3 */,
+				C0053A0E1CFD163E00A1E69E /* asdk */,
+				C0053A281CFD163F00A1E69E /* asdkTests */,
+				C0053A331CFD163F00A1E69E /* asdkUITests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		C0053A0D1CFD163E00A1E69E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A271CFD163F00A1E69E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A321CFD163F00A1E69E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		C0053A0B1CFD163E00A1E69E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A251CFD163F00A1E69E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0053A301CFD163F00A1E69E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C067DF1D1C3C154B007938D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -235,12 +410,15 @@
 				C000CB271C3D6E870030870A /* house.cpp in Sources */,
 				C067DF301C3C2BF4007938D5 /* enemy.cpp in Sources */,
 				C000CB1C1C3D658B0030870A /* outside.cpp in Sources */,
+				C0A594C11CF63BDE0004CF62 /* potion.cpp in Sources */,
+				C0A594BE1CF639CF0004CF62 /* weapon.cpp in Sources */,
 				C000CB391C403BAB0030870A /* grass.cpp in Sources */,
+				C0F6F8DE1CFB20E2004AE83B /* key.cpp in Sources */,
 				C000CB241C3D6C710030870A /* inside.cpp in Sources */,
 				C067DF401C3C780C007938D5 /* monster.cpp in Sources */,
-				C000CB2C1C3D88D50030870A /* game.cpp in Sources */,
 				C067DF3D1C3C3A78007938D5 /* container.cpp in Sources */,
 				C000CB321C3DCC5C0030870A /* player.cpp in Sources */,
+				C0A594BB1CF609EA0004CF62 /* game.cpp in Sources */,
 				C067DF371C3C3321007938D5 /* environment.cpp in Sources */,
 				C000CB361C40235A0030870A /* water.cpp in Sources */,
 				C067DF341C3C31AA007938D5 /* entity.cpp in Sources */,
@@ -250,7 +428,118 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C0053A2B1CFD163F00A1E69E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0053A0E1CFD163E00A1E69E /* asdk */;
+			targetProxy = C0053A2A1CFD163F00A1E69E /* PBXContainerItemProxy */;
+		};
+		C0053A361CFD163F00A1E69E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0053A0E1CFD163E00A1E69E /* asdk */;
+			targetProxy = C0053A351CFD163F00A1E69E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		C0053A3B1CFD163F00A1E69E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INFOPLIST_FILE = asdk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C0053A3C1CFD163F00A1E69E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = asdk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C0053A3D1CFD163F00A1E69E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = asdkTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/asdk.app/asdk";
+			};
+			name = Debug;
+		};
+		C0053A3E1CFD163F00A1E69E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = asdkTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/asdk.app/asdk";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C0053A3F1CFD163F00A1E69E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = asdkUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdkUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = asdk;
+			};
+			name = Debug;
+		};
+		C0053A401CFD163F00A1E69E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = asdkUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = cprog.asdkUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = asdk;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		C067DF261C3C154B007938D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -347,6 +636,30 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C0053A411CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0053A3B1CFD163F00A1E69E /* Debug */,
+				C0053A3C1CFD163F00A1E69E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C0053A421CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0053A3D1CFD163F00A1E69E /* Debug */,
+				C0053A3E1CFD163F00A1E69E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C0053A431CFD163F00A1E69E /* Build configuration list for PBXNativeTarget "asdkUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0053A3F1CFD163F00A1E69E /* Debug */,
+				C0053A401CFD163F00A1E69E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		C067DF1C1C3C154B007938D5 /* Build configuration list for PBXProject "lab3" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

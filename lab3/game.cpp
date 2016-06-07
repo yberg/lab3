@@ -128,14 +128,15 @@ Game::~Game() {
         }
     }
     items.clear();
+    for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
+        if (dynamic_cast<Key*>(*it))
+            delete (*it);
+    }
+    player.inventory().clear();
     for (auto it = store.begin(); it != store.end(); ++it) {
         delete (*it);
     }
     store.clear();
-    for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
-        delete (*it);
-    }
-    player.inventory().clear();
 }
 
 /**
