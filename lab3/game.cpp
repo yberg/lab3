@@ -540,7 +540,6 @@ void Game::draw_enemies() {
         color = COLOR_PAIR(GUARDIAN_GRASS);
     
     move(guardian->position().row + 1, guardian->position().col * 2 + 1);
-    cout << "Pos: " << pos.row << ", " << pos.col << endl;
 
     attron(color);
     addch('T');
