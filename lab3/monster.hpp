@@ -13,6 +13,8 @@
 
 class Monster : public Enemy {
 private:
+    int _row, _col;
+    bool left;
 protected:
 public:
     Monster(string, string);
@@ -21,6 +23,8 @@ public:
     virtual void action(Entity*, Item*);
     virtual bool fight(const Entity&);
     virtual bool talk_to(const Entity&);
+    
+    void pos(int, int);
 };
 
 #endif /* monster_hpp */

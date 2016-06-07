@@ -37,6 +37,7 @@
 #define COLOR_WATER         COLOR_BLUE
 #define COLOR_GRASS         COLOR_GREEN
 #define COLOR_SUPERHOUSE    COLOR_RED
+#define COLOR_GUARDIAN      COLOR_RED
 
 #define BG_FG               1
 #define FG_HOUSE            2
@@ -56,8 +57,12 @@
 #define CYAN_BG             16
 #define FG_SUPERHOUSE       17
 #define PLAYER_SUPERHOUSE   18
+#define GUARDIAN_GRASS      19
+#define GUARDIAN_WATER      20
+#define GUARDIAN_BG         21
 
 Player player("Viktor");
+Monster * guardian = new Monster("Guardian", "Prince John");
 
 vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
 vector<vector<Entity*>> entities(Constants::WORLD_SIZE);
@@ -65,7 +70,7 @@ vector<vector<Item*>> items(Constants::WORLD_SIZE);
 
 vector<Item*> store;
 
-bool playing, pause_before_exit, show_buymenu, show_fight;
+bool playing, pause_before_exit, show_buymenu, show_fight, left, guardian_move;
 string status_first, status_second;
 
 /**
@@ -85,11 +90,20 @@ Game::Game() {
                     environment.at(i).push_back(new House(true));
                     entities.at(i).push_back(new Monster("Final boss", "Dr. Dark"));
                     superhouse = true;
+                    Constants::superhouse_pos = {i, j};
+                    status_first = to_string(i) + ", " + to_string(j);
+                    status_second = to_string(Constants::superhouse_pos.row) + ", " + to_string(Constants::superhouse_pos.col);
                 }
                 else {
-                    environment.at(i).push_back(new House(false));
-                    int r1 = rand() % 5;
-                    entities.at(i).push_back(new Monster(Constants::MONSTERS.at(r1).first, Constants::MONSTERS.at(r1).second));
+                    if (i != Constants::superhouse_pos.row + 1 && (j < Constants::superhouse_pos.col - 1 || j > Constants::superhouse_pos.col + 1)) {
+                        environment.at(i).push_back(new House(false));
+                        int r1 = rand() % 5;
+                        entities.at(i).push_back(new Monster(Constants::MONSTERS.at(r1).first, Constants::MONSTERS.at(r1).second));
+                    }
+                    else {
+                        environment.at(i).push_back(new Grass());
+                        entities.at(i).push_back(NULL);
+                    }
                 }
             }
             else if (r < 2) {
@@ -102,6 +116,9 @@ Game::Game() {
             }
         }
     }
+    entities.at(Constants::superhouse_pos.row + 1).at(Constants::superhouse_pos.col) = guardian;
+    guardian->pos(Constants::superhouse_pos.row + 1, Constants::superhouse_pos.col);
+    guardian->position(Constants::superhouse_pos.row + 1, Constants::superhouse_pos.col);
     
     init_screen();
     intro();
@@ -137,6 +154,8 @@ Game::~Game() {
         delete (*it);
     }
     store.clear();
+    
+    delete guardian;
 }
 
 /**
@@ -167,6 +186,9 @@ void Game::init_screen() {
     init_pair(16, COLOR_CYAN, COLOR_BG);
     init_pair(17, COLOR_FG, COLOR_SUPERHOUSE);
     init_pair(18, COLOR_PLAYER, COLOR_SUPERHOUSE);
+    init_pair(19, COLOR_GUARDIAN, COLOR_GRASS);
+    init_pair(20, COLOR_GUARDIAN, COLOR_WATER);
+    init_pair(21, COLOR_GUARDIAN, COLOR_BG);
 }
 
 /**
@@ -247,6 +269,20 @@ void Game::run() {
     while (playing && player.is_alive()) {
         int k = getch();  // Wait for input
         if (k == KEY_UP || k == KEY_DOWN || k == KEY_RIGHT || k == KEY_LEFT) {
+            
+            /* Move guardian */
+            if (guardian_move) {
+                for (int i = Constants::superhouse_pos.col - 1; i <= Constants::superhouse_pos.col + 1; i++) {
+                    entities.at(Constants::superhouse_pos.row + 1).at(i) = NULL;
+                }
+                guardian->action(nullptr, nullptr);
+                entities.at(guardian->position().row).at(guardian->position().col) = guardian;
+                guardian_move = false;
+            }
+            else {
+                guardian_move = true;
+            }
+            
             if (!player.go(dirs[k], environment, player.has_key())) {  // Check if player can go in given direction
                 status_first = "You can't enter here";
                 status_second = "";
@@ -265,6 +301,7 @@ void Game::run() {
             else {
                 show_fight = false;
             }
+
         }
         /* Bring up buymenu */
         else if (k == 'b' && !show_fight) {
@@ -429,6 +466,7 @@ void Game::draw() {
     
     draw_edges();
     draw_environment();
+    draw_enemies();
     draw_player();
     draw_info();
     draw_inventory();
@@ -491,6 +529,23 @@ void Game::draw_environment() {
         row++;
         col = 0;
     }
+}
+
+void Game::draw_enemies() {
+    Entity::Position pos = guardian->position();
+    auto color = COLOR_PAIR(GUARDIAN_BG);
+    if (environment.at(pos.row).at(pos.col)->description().environment == "Water")
+        color = COLOR_PAIR(GUARDIAN_WATER);
+    else if (environment.at(pos.row).at(pos.col)->description().environment == "Grass")
+        color = COLOR_PAIR(GUARDIAN_GRASS);
+    
+    move(guardian->position().row + 1, guardian->position().col * 2 + 1);
+    cout << "Pos: " << pos.row << ", " << pos.col << endl;
+
+    attron(color);
+    addch('T');
+    addch('T');
+    attroff(color);
 }
 
 /**

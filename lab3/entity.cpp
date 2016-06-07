@@ -142,6 +142,10 @@ Entity::Position Entity::position() {
     return _position;
 }
 
+void Entity::position(int row, int col) {
+    _position = {row, col};
+}
+
 bool Entity::pick_up(const Item& item) {
     //_items.push_back(item);
     return false;

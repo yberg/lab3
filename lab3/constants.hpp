@@ -14,6 +14,7 @@
 #include "weapon.hpp"
 #include "potion.hpp"
 #include "monster.hpp"
+#include "entity.hpp"
 
 namespace Constants {
     
@@ -41,7 +42,8 @@ namespace Constants {
         std::make_pair("Villager", "Joe"),
         std::make_pair("Knight", "Lancelot")
     };
-
+    
+    static struct Entity::Position superhouse_pos;
 }
 
 #endif /* constants_h */

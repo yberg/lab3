@@ -31,6 +31,7 @@ public:
     void draw();
     void draw_edges();
     void draw_environment();
+    void draw_enemies();
     void draw_player();
     void draw_info();
     void draw_inventory();

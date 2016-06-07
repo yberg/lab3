@@ -46,6 +46,8 @@ public:
     virtual void max_hp(int);
     virtual bool is_alive() const;
     
+    void position(int, int);
+    
     bool go(const char, const vector<vector<Environment*>>&, bool);
     Position position();
     bool pick_up(const Item&);
