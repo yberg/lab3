@@ -808,7 +808,10 @@ void Game::draw_fight() {
         
         /* Enemy damage */
         move(3, 50);
-        printw("Damage: %d", enemy->damage());
+        if (enemy->type() == "Guardian")
+            printw("Damage: %d", 1000);
+        else
+            printw("Damage: %d", enemy->damage());
         
         /* Enemy health */
         putstr("Health", 4, 50);
