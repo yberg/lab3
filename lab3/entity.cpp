@@ -52,9 +52,18 @@ bool Entity::is_alive() const {
     return _hp > 0;
 }
 
+/**
+ * Moves an entity to given position.
+ * @param  direction Direction to move in
+ * @param  env       Game environment matrix
+ * @param  has_key   Whether the entity has a key
+ * @return           Whether the entity can move or not
+ */
 bool Entity::go(const char direction, const vector<vector<Environment*>>& env, bool has_key) {
     int &row = _position.row;
     int &col = _position.col;
+
+    /* Updates entity position variables if it can move */
     switch (direction) {
         case Direction::UP:
             if (row <= 0) return false;
@@ -91,7 +100,16 @@ bool Entity::go(const char direction, const vector<vector<Environment*>>& env, b
     return false;
 }
 
+/**
+ * Checks if given destination is a valid move.
+ * @param  src       Source position
+ * @param  dest      Destination
+ * @param  direction Direction to move in
+ * @param  has_key   Whether the entity has a key
+ * @return           Whether the player can move or not
+ */
 bool Entity::enter(Environment * src, Environment * dest, const char direction, bool has_key) {
+    /* House to house */
     if (dynamic_cast<House*>(src)) {
         if (House* dest_house = dynamic_cast<House*>(dest)) {
             if (dest_house->req_key()) {
@@ -105,6 +123,7 @@ bool Entity::enter(Environment * src, Environment * dest, const char direction, 
             return true;
         }
     }
+    /* Anywhere to house */
     else if (House* dest_house = dynamic_cast<House*>(dest)) {
         if (dest_house->entrance() == direction) {
             if (dest_house->req_key())

@@ -29,6 +29,12 @@ Player::~Player() {
     
 }
 
+/**
+ * Deals damage to another entity. Damage is randomized from 1 to max damage of the weapon
+ * plus the player's base damage.   
+ * @param entity The entity to attack
+ * @param item   The item to attack with
+ */
 void Player::action(Entity* entity, Item* item) {
     if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
         int damage;
@@ -40,6 +46,7 @@ void Player::action(Entity* entity, Item* item) {
         }
         enemy->hp(max(0, enemy->hp() - damage));
     }
+    /* If item is not a weapon, but a potion - don't attack */
     else if (Potion* potion = dynamic_cast<Potion*>(item)) {
         _hp = min(_max_hp, _hp + potion->healing());
         for (auto it = this->_inventory.begin(); it != this->_inventory.end(); ++it) {
@@ -115,6 +122,11 @@ void Player::level(int level) {
     _level = level;
 }
 
+/**
+ * Updates the player's experience. If experience exceeds max experience
+ * for the current level, the level is incremented by one and experience is reset.
+ * @param exp New experience
+ */
 void Player::exp(int exp) {
     if (exp >= Constants::EXP[_level - 1]) {
         _exp = exp - Constants::EXP[_level - 1];
@@ -135,13 +147,21 @@ void Player::has_key(bool has_key) {
     _has_key = has_key;
 }
 
+/**
+ * Checks if player can buy an item, and adds it to inventory.
+ * @param  item The item to buy
+ * @return      Whether the item can be bought or not
+ */
 bool Player::buy(Item* item) {
     if (item->price() > _balance)
         return false;
     
     _balance -= item->price();
     
-    if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {  // Add to inventory
+    /**
+     * Add the item to inventory
+     */
+    if (Weapon* weapon = dynamic_cast<Weapon*>(item)) { 
         const string name = weapon->name();
         auto it = find_if(this->inventory().begin(), this->inventory().end(), [&name](const Item* i) {return i->name() == name;});
         if (it != this->inventory().end()) {

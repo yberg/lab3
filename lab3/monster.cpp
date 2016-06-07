@@ -24,6 +24,11 @@ Monster::~Monster() {
     
 }
 
+/**
+ * Deals damage to another entity. Damage is randomized from 1 to the monster's max damage.
+ * @param entity The entity to attack
+ * @param item   Item to attack with
+ */
 void Monster::action(Entity* entity, Item* item) {
     if (Player* player = dynamic_cast<Player*>(entity)) {
         int damage = (rand() % (int)(this->damage() * Constants::DAMAGE_PER_LEVEL_MULTIPLIER)) + 1;

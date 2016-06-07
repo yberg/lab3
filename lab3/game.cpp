@@ -58,6 +58,7 @@
 #define PLAYER_SUPERHOUSE   18
 
 Player player("Viktor");
+
 vector<vector<Environment*>> environment(Constants::WORLD_SIZE);
 vector<vector<Entity*>> entities(Constants::WORLD_SIZE);
 vector<vector<Item*>> items(Constants::WORLD_SIZE);
@@ -67,6 +68,9 @@ vector<Item*> store;
 bool playing, pause_before_exit, show_buymenu, show_fight;
 string status_first, status_second;
 
+/**
+ * Randomly generates environment blocks and puts them on the board.
+ */
 Game::Game() {
     srand((unsigned int)time(NULL));
     
@@ -111,24 +115,32 @@ Game::~Game() {
             delete (*it2);
         }
     }
+    environment.clear();
     for (auto it = entities.begin(); it != entities.end(); ++it) {
         for (auto it2 = (*it).begin(); it2 != (*it).end(); ++it2) {
             delete (*it2);
         }
     }
+    entities.clear();
     for (auto it = items.begin(); it != items.end(); ++it) {
         for (auto it2 = (*it).begin(); it2 != (*it).end(); ++it2) {
             delete (*it2);
         }
     }
-    for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
-        delete (*it);
-    }
+    items.clear();
     for (auto it = store.begin(); it != store.end(); ++it) {
         delete (*it);
     }
+    store.clear();
+    for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
+        delete (*it);
+    }
+    player.inventory().clear();
 }
 
+/**
+ * Initialises the ncurses window.
+ */
 void Game::init_screen() {
     initscr();
     noecho();
@@ -156,6 +168,9 @@ void Game::init_screen() {
     init_pair(18, COLOR_PLAYER, COLOR_SUPERHOUSE);
 }
 
+/**
+ * Prints intro text on the screen.
+ */
 void Game::intro() {
     return; // remove
     move(5, 10);
@@ -173,6 +188,9 @@ void Game::intro() {
     }
 }
 
+/**
+ * Initialise game variables.
+ */
 void Game::init_game() {
     player.balance(Constants::PLAYER_START_BALANCE);
     player.level(Constants::PLAYER_START_LEVEL);
@@ -185,6 +203,9 @@ void Game::init_game() {
     };
 }
 
+/**
+ * Quits the game.
+ */
 void Game::quit() {
     move(28, 1);
     clrtoeol();
@@ -204,6 +225,10 @@ void Game::quit() {
     }
 }
 
+/**
+ * Loops as long as the player is alive. Waits for player input and performs actions.
+ * At the end of each loop, draw() is called, and the board is updated.
+ */
 void Game::run() {
     draw();
     
@@ -219,15 +244,17 @@ void Game::run() {
     pause_before_exit = true;
     
     while (playing && player.is_alive()) {
-        int k = getch();
+        int k = getch();  // Wait for input
         if (k == KEY_UP || k == KEY_DOWN || k == KEY_RIGHT || k == KEY_LEFT) {
-            if (!player.go(dirs[k], environment, player.has_key())) {
-                status_first = "You can't enter without a key";
+            if (!player.go(dirs[k], environment, player.has_key())) {  // Check if player can go in given direction
+                status_first = "You can't enter here";
                 status_second = "";
             }
+            /* If there is an enemy at player position */
             if ((enemy = dynamic_cast<Enemy*>(entities.at(player.position().row).at(player.position().col))) != NULL) {
                 show_fight = true;
                 show_buymenu = false;
+                /* Set enemy hp and damage based on player level */
                 if (enemy->is_alive()) {
                     enemy->hp(Constants::ENEMY_HP[player.level() - 1]);
                     enemy->max_hp(enemy->hp());
@@ -238,9 +265,11 @@ void Game::run() {
                 show_fight = false;
             }
         }
+        /* Bring up buymenu */
         else if (k == 'b' && !show_fight) {
             show_buymenu = !show_buymenu;
         }
+        /* If buymenu is active and player clicks on a key */
         else if (show_buymenu) {
             for (unsigned i = 0; i < store.size(); ++i) {
                 if (k == (char)(i+49)) {
@@ -248,8 +277,10 @@ void Game::run() {
                 }
             }
         }
-        if (k == '9') {  // Use healing potion
+        /* Static keybind for using a healing potion */
+        if (k == '9') {
             const string name = "Healing potion";
+            /* Check if there is a healing potion in inventory, and use it */
             auto it = find_if(player.inventory().begin(), player.inventory().end(), [&name](const Item* i) {
                 return i->name() == name;
             });
@@ -257,23 +288,36 @@ void Game::run() {
                 player.action(nullptr, *it);
             }
         }
+        /* Quit the game */
         if (k == 'q') {  // Quit
             quit();
         }
+
+        /* Redraw the board */ 
         draw();
+
+        /* If a fight is active, jump to fight() function */
         if (show_fight) {
             fight(enemy);
         }
     }
+
+    /* Game is finished, press Q to quit */
     while (pause_before_exit) {
         if (getch() == 'q') {  // Quit
             quit();
         }
         draw();
     };
+
+    /* Close the ncurses window */
     endwin();
 }
 
+/**
+ * Simulates a fight against an enemy. Waits for player input, and makes the enemy fight back.
+ * @param enemy A pointer to the enemy to fight
+ */
 void Game::fight(Enemy* enemy) {
     Item* item;
     bool attacked, healed;
@@ -283,6 +327,7 @@ void Game::fight(Enemy* enemy) {
         attacked = false;
         healed = false;
         
+        /* Store player and enemy hp before each attack */
         enemy_hp = enemy->hp();
         player_hp = player.hp();
         
@@ -291,10 +336,14 @@ void Game::fight(Enemy* enemy) {
             draw();
             break;
         }
+
+        /* Press 0 to attack the enemy without a weapon */
         if (k == '0') {
             player.action(enemy, NULL);
             attacked = true;
         }
+
+        /* Static keybind for using a healing potion */
         else if (k == '9') {
             const string name = "Healing potion";
             auto it = find_if(player.inventory().begin(), player.inventory().end(), [&name](const Item* i) {
@@ -306,10 +355,14 @@ void Game::fight(Enemy* enemy) {
                 healed = true;
             }
         }
+
+        /* Attack with any weapon from the inventory */
         else {
             for (unsigned i = 0; i < player.inventory().size(); ++i) {
                 if (k == (char)(i+49)) {
                     item = player.inventory().at(i);
+                    /* If the chosen item from the inventory is a weapon, 
+                     * use it to attack the enemy. */
                     if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
                         player.action(enemy, weapon);
                         attacked = true;
@@ -319,6 +372,7 @@ void Game::fight(Enemy* enemy) {
             }
         }
         
+        /* Player attacked the enemy but it is still alive */
         if (attacked && enemy->hp() > 0) {
             enemy->action(&player, NULL);
             
@@ -330,12 +384,15 @@ void Game::fight(Enemy* enemy) {
             }
             status_second = enemy->name() + " damaged you for " + to_string(player_hp - player.hp());
             
+            /* Player died, game over */
             if (!player.is_alive()) {
                 status_first = "Game over";
                 status_second = "You died";
                 playing = false;
             }
         }
+
+        /* Enemy died, give the player money and experience and exit the fight */
         else if (attacked && enemy->hp() == 0) {
             player.balance(player.balance() + enemy->max_hp()/10);
             player.exp(player.exp() + enemy->max_hp()/20);
@@ -357,10 +414,15 @@ void Game::fight(Enemy* enemy) {
                 }
             }
         }
+
+        /* Redraw the board */
         draw();
     }
 }
 
+/**
+ * Clears the screen and calls submethods for redrawing the screen.
+ */
 void Game::draw() {
     clearscr();
     
@@ -376,8 +438,10 @@ void Game::draw() {
     refresh();
 }
 
+/**
+ * Draws the outer edges of the board.
+ */
 void Game::draw_edges() {
-    // Edges
     show_fight ? attron(COLOR_PAIR(RED_BG)) : attron(COLOR_PAIR(GREEN_BG));
     for (int i = 1; i <= Constants::WORLD_SIZE*2; i++) {
         move(0, i);
@@ -394,8 +458,10 @@ void Game::draw_edges() {
     show_fight ? attroff(COLOR_PAIR(RED_BG)) : attroff(COLOR_PAIR(GREEN_BG));
 }
 
+/**
+ * Draws the environment on the board, (Houses, water, grass).
+ */
 void Game::draw_environment() {
-    // Environment
     int row = 0, col = 0;
     for (auto &r : environment) {
         for (auto &e : r) {
@@ -426,8 +492,10 @@ void Game::draw_environment() {
     }
 }
 
+/**
+ * Gets the player position, finds the correct background color and draws the player.
+ */
 void Game::draw_player() {
-    // Player
     Entity::Position pos = player.position();
     auto color = COLOR_PAIR(PLAYER_BG);
     if (environment.at(pos.row).at(pos.col)->description().environment == "House")
@@ -446,18 +514,19 @@ void Game::draw_player() {
     attroff(color);
 }
 
+/**
+ * Prints and draws player info, such as name, health, experience, level and balance.
+ */
 void Game::draw_info() {
-    // Info
-
     int i;
     
-    // Level
+    /* Level */
     move(22, 2);
     printw("Level %d/%d", player.level(), Constants::MAX_LEVEL);
     move(22, 16 - ceil(log10(player.max_exp()+1)));
     printw("%3d/%d", player.exp(), player.max_exp());
     
-    // Experience
+    /* Experience */
     move(23, 1);
     attron(COLOR_PAIR(FG_CYAN));
     for (i = 0; i < (player.exp() / (double)player.max_exp()) * 20; i++) {
@@ -480,12 +549,12 @@ void Game::draw_info() {
     }
     attroff(COLOR_PAIR(FG_RED));
     
-    // HP
+    /* Health */
     putstr("Health", 22, 22);
     move(22, 36 - ceil(log10(player.max_hp()+1)));
     printw("%3d/%d", player.hp(), player.max_hp());
     
-    // HP bar
+    /* Health bar */
     move(23, 21);
     attron(COLOR_PAIR(FG_GREEN));
     for (i = 0; i < (player.hp() / (double)player.max_hp()) * 20; i++) {
@@ -508,7 +577,7 @@ void Game::draw_info() {
     }
     attroff(COLOR_PAIR(FG_RED));
     
-    // Name
+    /* Name */
     move(25, 1);
     attron(COLOR_PAIR(CYAN_BG));
     attron(A_UNDERLINE);
@@ -516,13 +585,13 @@ void Game::draw_info() {
     attroff(A_UNDERLINE);
     attroff(COLOR_PAIR(CYAN_BG));
     
-    // Damage & block
+    /* Damage & block */
     move(26, 1);
     printw("Damage: \t%d (+%d)", player.damage(), player.base_damage());
     move(27, 1);
     printw("Block: \t%d", player.block());
     
-    // Balance
+    /* Balance */
     move(22, 50);
     printw("Balance: ");
     attron(COLOR_PAIR(YELLOW_BG));
@@ -530,6 +599,9 @@ void Game::draw_info() {
     attroff(COLOR_PAIR(YELLOW_BG));
 }
 
+/**
+ * Prints the contents of the player's inventory.
+ */
 void Game::draw_inventory() {
     int j = 1;
     int num_potions = 0;
@@ -561,11 +633,13 @@ void Game::draw_inventory() {
         printw("0. Kick");
     }
     
+    /* Go through the inventory and print the item if it's not a potion */
     Weapon* w = nullptr;
     for (auto it = player.inventory().begin(); it != player.inventory().end(); ++it) {
         w = nullptr;
         if (!(dynamic_cast<Potion*>(*it))) {
             move(i++, 50);
+            /* Print <#>. <wpn.name>  (<dmg>, <blk>) */
             if ((w = dynamic_cast<Weapon*>(*it)) && show_fight)
                 printw("%d. ", j++);
             printw((*it)->name().c_str());
@@ -583,6 +657,7 @@ void Game::draw_inventory() {
         }
     }
     
+    /* Print potions separately, along with the quantity */ 
     const string name = "Healing potion";
     auto it = find_if(player.inventory().begin(), player.inventory().end(), [&name](const Item* i) {return i->name() == name;});
     if (it != player.inventory().end()) {
@@ -594,6 +669,7 @@ void Game::draw_inventory() {
         printw(")");
     }
 
+    /* Print "Empty" if inventory is empty */
     move(i, 50);
     if (!show_fight && i == i_start + 1) {
         attron(COLOR_PAIR(YELLOW_BG));
@@ -602,6 +678,9 @@ void Game::draw_inventory() {
     }
 }
 
+/**
+ * Prints status messages.
+ */
 void Game::draw_status() {
     move(24, 50);
     printw("%s", status_first.c_str());
@@ -609,8 +688,10 @@ void Game::draw_status() {
     printw("%s", status_second.c_str());
 }
 
+/**
+ * Prints all buyable items in the store.
+ */
 void Game::draw_buymenu() {
-    // Buymenu
     attron(A_UNDERLINE);
     attron(COLOR_PAIR(GREEN_BG));
     putstr("       BUYMENU       ", 1, 50);
@@ -620,6 +701,7 @@ void Game::draw_buymenu() {
     int choice = 1, i = 2;
     for (auto it = store.begin(); it != store.end(); ++it) {
         move(i++, 50);
+        /* Prints <#>. $<cost> <item.name>  (<dmg>, <blk>, <healing>) */
         printw("%d. $%-3d %s", choice++, (*it)->price(), (*it)->name().c_str());
         if (Weapon* w = dynamic_cast<Weapon*>(*it)) {
             printw(" (");
@@ -643,6 +725,9 @@ void Game::draw_buymenu() {
     putstr("b. Close", ++i, 50);
 }
 
+/**
+ * Draws the fight between the player and an enemy.
+ */
 void Game::draw_fight() {
     
     if (Enemy* enemy = dynamic_cast<Enemy*>(entities.at(player.position().row).at(player.position().col))) {
@@ -654,7 +739,7 @@ void Game::draw_fight() {
         attroff(A_UNDERLINE);
         attroff(COLOR_PAIR(RED_BG));
         
-        // Name
+        /* Enemy name */
         move(2, 50);
         printw(enemy->name().c_str());
         printw(" (");
@@ -666,16 +751,16 @@ void Game::draw_fight() {
             attroff(COLOR_PAIR(RED_BG));
         }
         
-        // Damage
+        /* Enemy damage */
         move(3, 50);
         printw("Damage: %d", enemy->damage());
         
-        // HP
+        /* Enemy health */
         putstr("Health", 4, 50);
         move(4, 66 - ceil(log10(enemy->max_hp()+1)));
         printw("%3d/%d", enemy->hp(), enemy->max_hp());
         
-        // HP bar
+        /* Enemy health bar */
         int i;
         move(5, 50);
         attron(COLOR_PAIR(FG_GREEN));
@@ -701,17 +786,32 @@ void Game::draw_fight() {
     }
 }
 
+/**
+ * Prints a char at given position.
+ * @param c   char to print
+ * @param row Row
+ * @param col Column
+ */
 void Game::putch(char c, int row, int col) {
     move(row + 1, col * 2 + 1);
     addch(c);
     addch(c);
 }
 
+/**
+ * Prints a string at given position.  
+ * @param s   String to print
+ * @param row Row
+ * @param col Column
+ */
 void Game::putstr(string s, int row, int col) {
     move(row, col);
     printw(s.c_str());
 }
 
+/**
+ * Clears necessary parts of the screen.
+ */
 void Game::clearscr() {
     // TODO adjust to info pane
     for (int i = 0; i < 22; i++) {
